@@ -30,6 +30,8 @@ const lightColors = {
   dangerSoft: '#FFE7E7',
   track: '#ECE8F7',
   divider: '#EDE9F7',
+  success: '#22C55E',
+warning: '#F59E0B',
 };
 
 const darkColors = {
@@ -57,6 +59,8 @@ const darkColors = {
   dangerSoft: 'rgba(255,92,122,0.14)',
   track: 'rgba(255,255,255,0.08)',
   divider: 'rgba(255,255,255,0.08)',
+  success: '#4ADE80',
+warning: '#FBBF24',
 };
 
 export type ThemeColors = typeof lightColors;
