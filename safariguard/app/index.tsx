@@ -38,7 +38,7 @@ export default function WelcomeScreen() {
 
       <Animated.View style={[styles.hero, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
         <View style={styles.logoCircle}>
-          <IconSymbol name="shield.fill" size={40} color="#3B82F6" />
+          <IconSymbol name="shield.fill" size={40} color="#FF9500" />
         </View>
         <Text style={styles.title}>SafariGuard</Text>
         <Text style={styles.subtitle}>
@@ -66,7 +66,7 @@ export default function WelcomeScreen() {
             ]}
           >
             <View style={styles.featureIcon}>
-              <IconSymbol name={f.icon} size={16} color="#3B82F6" />
+              <IconSymbol name={f.icon} size={16} color="#6152FF" />
             </View>
             <Text style={styles.featureText}>{f.label}</Text>
           </Animated.View>
@@ -80,7 +80,7 @@ export default function WelcomeScreen() {
           onPress={() => router.push("/(auth)/login" as any)}
         >
           <Text style={styles.primaryButtonText}>Get Started</Text>
-          <IconSymbol name="arrow.right" size={16} color="#F1F5F9" />
+          <IconSymbol name="arrow.right" size={16} color="#FFFFFF" />
         </TouchableOpacity>
 
         <Text style={styles.footerNote}>Made in Kenya 🇰🇪</Text>
@@ -92,7 +92,7 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0D1526",
+    backgroundColor: "#F8F9FA",
     paddingHorizontal: 28,
     justifyContent: "space-between",
     paddingTop: 100,
@@ -102,36 +102,37 @@ const styles = StyleSheet.create({
   glowTop: {
     position: "absolute", top: -80, left: -60,
     width: width * 0.8, height: width * 0.8, borderRadius: width * 0.4,
-    backgroundColor: "#3B82F6", opacity: 0.08,
+    backgroundColor: "#6152FF", opacity: 0.15,
   },
   glowBottom: {
     position: "absolute", bottom: -100, right: -80,
     width: width * 0.9, height: width * 0.9, borderRadius: width * 0.45,
-    backgroundColor: "#A855F7", opacity: 0.06,
+    backgroundColor: "#FF9500", opacity: 0.15,
   },
   hero: { alignItems: "center" },
   logoCircle: {
     width: 88, height: 88, borderRadius: 28,
-    backgroundColor: "#3B82F622", borderWidth: 1, borderColor: "#3B82F644",
+    backgroundColor: "#FF950015", borderWidth: 1, borderColor: "#FF950033",
     alignItems: "center", justifyContent: "center", marginBottom: 20,
   },
-  title: { fontSize: 30, fontWeight: "800", color: "#F1F5F9", letterSpacing: 0.3, marginBottom: 10 },
+  title: { fontSize: 30, fontWeight: "800", color: "#1E293B", letterSpacing: 0.3, marginBottom: 10 },
   subtitle: {
-    fontSize: 14, color: "#94A3B8", textAlign: "center",
+    fontSize: 14, color: "#64748B", textAlign: "center",
     lineHeight: 20, paddingHorizontal: 12,
   },
   featureList: { gap: 14 },
   featureRow: { flexDirection: "row", alignItems: "center", gap: 12 },
   featureIcon: {
     width: 34, height: 34, borderRadius: 10,
-    backgroundColor: "#3B82F622", alignItems: "center", justifyContent: "center",
+    backgroundColor: "#6152FF15", alignItems: "center", justifyContent: "center",
   },
-  featureText: { fontSize: 14, color: "#F1F5F9", fontWeight: "500" },
+  featureText: { fontSize: 14, color: "#1E293B", fontWeight: "600" },
   ctaContainer: { alignItems: "center", gap: 16 },
   primaryButton: {
     flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8,
-    backgroundColor: "#3B82F6", width: "100%", height: 54, borderRadius: 16,
+    backgroundColor: "#6152FF", width: "100%", height: 54, borderRadius: 16,
+    shadowColor: '#6152FF', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 6,
   },
-  primaryButtonText: { fontSize: 15, fontWeight: "700", color: "#F1F5F9" },
-  footerNote: { fontSize: 12, color: "#64748B" },
+  primaryButtonText: { fontSize: 15, fontWeight: "700", color: "#FFFFFF" },
+  footerNote: { fontSize: 12, color: "#94A3B8" },
 });

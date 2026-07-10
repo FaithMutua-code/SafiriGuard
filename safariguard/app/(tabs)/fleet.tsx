@@ -116,18 +116,18 @@ export default function FleetScreen() {
       {/* Search */}
       <View style={styles.searchContainer}>
         <View style={styles.searchWrapper}>
-          <IconSymbol name="magnifyingglass" size={16} color="#64748B" />
+          <IconSymbol name="magnifyingglass" size={16} color="#8E8E93" />
           <TextInput
             style={styles.searchInput}
             placeholder="Search vehicles, drivers, routes..."
-            placeholderTextColor="#64748B"
+            placeholderTextColor="#8E8E93"
             value={search}
             onChangeText={setSearch}
             returnKeyType="search"
           />
           {search.length > 0 && (
             <TouchableOpacity onPress={() => setSearch('')}>
-              <IconSymbol name="xmark" size={14} color="#64748B" />
+              <IconSymbol name="xmark" size={14} color="#8E8E93" />
             </TouchableOpacity>
           )}
         </View>
@@ -166,7 +166,7 @@ export default function FleetScreen() {
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <IconSymbol name="car.fill" size={40} color="#1E2D45" />
+            <IconSymbol name="car.fill" size={40} color="#E2E8F0" />
             <Text style={styles.emptyText}>No vehicles found</Text>
           </View>
         }
@@ -184,25 +184,25 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 12,
   },
-  title: { fontSize: 22, fontWeight: '700', color: '#F1F5F9' },
-  subtitle: { fontSize: 12, color: '#64748B', marginTop: 2 },
+  title: { fontSize: 22, fontWeight: '700', color: '#1E293B' },
+  subtitle: { fontSize: 12, color: '#8E8E93', marginTop: 2 },
   statsRow: { flexDirection: 'row', gap: 10, alignItems: 'center' },
   miniStat: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   miniDot: { width: 8, height: 8, borderRadius: 4 },
-  miniStatText: { fontSize: 13, fontWeight: '600', color: '#94A3B8' },
+  miniStatText: { fontSize: 13, fontWeight: '600', color: '#8E8E93' },
   searchContainer: { paddingHorizontal: 16, marginBottom: 10 },
   searchWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#111827',
+    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#1E2D45',
+    borderColor: '#E2E8F0',
     paddingHorizontal: 14,
     height: 44,
     gap: 10,
   },
-  searchInput: { flex: 1, color: '#F1F5F9', fontSize: 14 },
+  searchInput: { flex: 1, color: '#1E293B', fontSize: 14 },
   filtersContainer: {
     flexDirection: 'row',
     paddingHorizontal: 16,
@@ -213,17 +213,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 20,
-    backgroundColor: '#111827',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#1E2D45',
+    borderColor: '#E2E8F0',
   },
   filterChipActive: {
-    borderColor: '#3B82F6',
-    backgroundColor: '#3B82F611',
+    borderColor: '#6152FF',
+    backgroundColor: '#6152FF11',
   },
-  filterText: { fontSize: 13, color: '#64748B', fontWeight: '500' },
-  filterTextActive: { color: '#3B82F6' },
+  filterText: { fontSize: 13, color: '#8E8E93', fontWeight: '500' },
+  filterTextActive: { color: '#6152FF' },
   listContent: { paddingHorizontal: 16, paddingBottom: 100 },
   emptyContainer: { alignItems: 'center', paddingTop: 60, gap: 12 },
-  emptyText: { color: '#64748B', fontSize: 15 },
+  emptyText: { color: '#8E8E93', fontSize: 15 },
 });

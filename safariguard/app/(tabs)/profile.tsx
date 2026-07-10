@@ -90,8 +90,8 @@ function SettingRow({ icon, iconColor, label, value, onPress, toggle, toggleValu
         <Switch
           value={toggleValue}
           onValueChange={onToggle}
-          trackColor={{ false: '#1E2D45', true: '#3B82F644' }}
-          thumbColor={toggleValue ? '#3B82F6' : '#64748B'}
+          trackColor={{ false: '#E2E8F0', true: '#6152FF44' }}
+          thumbColor={toggleValue ? '#6152FF' : '#FFFFFF'}
         />
       ) : value ? (
         <Text style={styles.settingValue}>{value}</Text>
@@ -136,7 +136,7 @@ export default function ProfileScreen() {
     <ScreenContainer containerClassName="bg-background">
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         {/* Profile Header */}
-        <GlassCard className="p-5 mb-4" glow glowColor="#3B82F6">
+        <GlassCard className="p-5 mb-4" glow glowColor="#6152FF">
           <View style={styles.profileHeader}>
             <View style={styles.avatarContainer}>
               <Text style={styles.avatarText}>{user?.name?.charAt(0) ?? 'U'}</Text>
@@ -177,7 +177,7 @@ export default function ProfileScreen() {
         <GlassCard className="mb-4 overflow-hidden">
           <SettingRow
             icon="person.fill"
-            iconColor="#3B82F6"
+            iconColor="#6152FF"
             label="Personal Information"
             onPress={() => {}}
           />
@@ -202,7 +202,7 @@ export default function ProfileScreen() {
         <GlassCard className="mb-4 overflow-hidden">
           <SettingRow
             icon="bell.fill"
-            iconColor="#3B82F6"
+            iconColor="#6152FF"
             label="Push Notifications"
             toggle
             toggleValue={pushNotifs}
@@ -240,7 +240,7 @@ export default function ProfileScreen() {
           <View style={styles.divider} />
           <SettingRow
             icon="location.fill"
-            iconColor="#3B82F6"
+            iconColor="#6152FF"
             label="Location Tracking"
             toggle
             toggleValue={locationTracking}
@@ -259,7 +259,7 @@ export default function ProfileScreen() {
                 activeOpacity={0.8}
               >
                 <View style={styles.vehicleIcon}>
-                  <IconSymbol name="car.fill" size={16} color="#3B82F6" />
+                  <IconSymbol name="car.fill" size={16} color="#6152FF" />
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.vehicleReg}>{v.regNumber}</Text>
@@ -310,38 +310,38 @@ const styles = StyleSheet.create({
   avatarContainer: { position: 'relative' },
   avatarText: {
     width: 64, height: 64, borderRadius: 32,
-    backgroundColor: '#3B82F622', borderWidth: 2, borderColor: '#3B82F644',
-    textAlign: 'center', lineHeight: 64, fontSize: 26, fontWeight: '700', color: '#3B82F6',
+    backgroundColor: '#6152FF22', borderWidth: 2, borderColor: '#6152FF44',
+    textAlign: 'center', lineHeight: 64, fontSize: 26, fontWeight: '700', color: '#6152FF',
     overflow: 'hidden',
   },
   onlineDot: {
     position: 'absolute', bottom: 2, right: 2,
     width: 14, height: 14, borderRadius: 7,
-    backgroundColor: '#10B981', borderWidth: 2, borderColor: '#111827',
+    backgroundColor: '#10B981', borderWidth: 2, borderColor: '#FFFFFF',
   },
-  userName: { fontSize: 20, fontWeight: '700', color: '#F1F5F9' },
-  userEmail: { fontSize: 13, color: '#64748B', marginTop: 2 },
-  profileStats: { flexDirection: 'row', paddingTop: 14, borderTopWidth: 1, borderTopColor: '#1E2D45' },
+  userName: { fontSize: 20, fontWeight: '700', color: '#1E293B' },
+  userEmail: { fontSize: 13, color: '#8E8E93', marginTop: 2 },
+  profileStats: { flexDirection: 'row', paddingTop: 14, borderTopWidth: 1, borderTopColor: '#E2E8F0' },
   profileStat: { flex: 1, alignItems: 'center' },
-  profileStatValue: { fontSize: 20, fontWeight: '700', color: '#F1F5F9' },
-  profileStatLabel: { fontSize: 11, color: '#64748B', marginTop: 2 },
-  profileStatDivider: { width: 1, backgroundColor: '#1E2D45', marginVertical: 4 },
-  sectionTitle: { fontSize: 12, fontWeight: '700', color: '#64748B', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8, marginTop: 4 },
+  profileStatValue: { fontSize: 20, fontWeight: '700', color: '#1E293B' },
+  profileStatLabel: { fontSize: 11, color: '#8E8E93', marginTop: 2 },
+  profileStatDivider: { width: 1, backgroundColor: '#E2E8F0', marginVertical: 4 },
+  sectionTitle: { fontSize: 12, fontWeight: '700', color: '#8E8E93', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8, marginTop: 4 },
   settingRow: {
     flexDirection: 'row', alignItems: 'center', gap: 12,
     paddingHorizontal: 16, paddingVertical: 14,
   },
   settingIcon: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  settingLabel: { flex: 1, fontSize: 14, color: '#F1F5F9', fontWeight: '500' },
-  settingValue: { fontSize: 13, color: '#64748B' },
-  divider: { height: 1, backgroundColor: '#1E2D45', marginLeft: 62 },
+  settingLabel: { flex: 1, fontSize: 14, color: '#1E293B', fontWeight: '500' },
+  settingValue: { fontSize: 13, color: '#8E8E93' },
+  divider: { height: 1, backgroundColor: '#E2E8F0', marginLeft: 62 },
   vehicleRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8 },
   vehicleIcon: {
     width: 36, height: 36, borderRadius: 10,
-    backgroundColor: '#3B82F622', alignItems: 'center', justifyContent: 'center',
+    backgroundColor: '#6152FF22', alignItems: 'center', justifyContent: 'center',
   },
-  vehicleReg: { fontSize: 14, fontWeight: '600', color: '#F1F5F9', fontFamily: 'monospace' },
-  vehicleRoute: { fontSize: 11, color: '#64748B', marginTop: 2 },
+  vehicleReg: { fontSize: 14, fontWeight: '600', color: '#1E293B', fontFamily: 'monospace' },
+  vehicleRoute: { fontSize: 11, color: '#8E8E93', marginTop: 2 },
   vehicleStatusDot: { width: 8, height: 8, borderRadius: 4 },
   logoutButton: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10,
@@ -349,5 +349,5 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: '#EF444433', marginBottom: 16,
   },
   logoutText: { fontSize: 15, fontWeight: '600', color: '#EF4444' },
-  footer: { textAlign: 'center', fontSize: 12, color: '#64748B', marginBottom: 8 },
+  footer: { textAlign: 'center', fontSize: 12, color: '#8E8E93', marginBottom: 8 },
 });

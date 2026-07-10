@@ -77,17 +77,17 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#F1F5F9',
+    color: '#1E293B',
     marginBottom: 2,
   },
   label: {
     fontSize: 12,
-    color: '#64748B',
+    color: '#8E8E93',
     fontWeight: '500',
   },
   subtitle: {
     fontSize: 10,
-    color: '#64748B',
+    color: '#8E8E93',
     marginTop: 2,
   },
 });

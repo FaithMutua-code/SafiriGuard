@@ -38,11 +38,11 @@ const INSIGHT_ICONS = {
 } as const;
 
 const INSIGHT_COLORS = {
-  peak_hours: '#3B82F6',
+  peak_hours: '#6152FF',
   safety_trend: '#EF4444',
   driver_performance: '#10B981',
-  occupancy_pattern: '#F59E0B',
-  maintenance_alert: '#A855F7',
+  occupancy_pattern: '#FF9500',
+  maintenance_alert: '#6152FF',
 };
 
 const IMPACT_COLORS = {
@@ -104,13 +104,13 @@ function InsightCard({ insight, index }: { insight: AIInsight; index: number }) 
           <View style={styles.affectedRow}>
             {insight.vehicleIds && (
               <View style={styles.affectedChip}>
-                <IconSymbol name="car.fill" size={10} color="#64748B" />
+                <IconSymbol name="car.fill" size={10} color="#8E8E93" />
                 <Text style={styles.affectedText}>{insight.vehicleIds.length} vehicle(s)</Text>
               </View>
             )}
             {insight.driverIds && (
               <View style={styles.affectedChip}>
-                <IconSymbol name="person.fill" size={10} color="#64748B" />
+                <IconSymbol name="person.fill" size={10} color="#8E8E93" />
                 <Text style={styles.affectedText}>{insight.driverIds.length} driver(s)</Text>
               </View>
             )}
@@ -133,24 +133,24 @@ export default function InsightsScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <IconSymbol name="arrow.left" size={20} color="#F1F5F9" />
+          <IconSymbol name="arrow.left" size={20} color="#1E293B" />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>AI Insights</Text>
           <Text style={styles.subtitle}>Powered by SafariGuard Intelligence</Text>
         </View>
         <View style={styles.aiBadge}>
-          <IconSymbol name="sparkles" size={14} color="#A855F7" />
+          <IconSymbol name="sparkles" size={14} color="#FF9500" />
           <Text style={styles.aiBadgeText}>Live</Text>
         </View>
       </View>
 
       {/* Summary Banner */}
       <Animated.View style={[styles.bannerContainer, { opacity: headerAnim }]}>
-        <GlassCard className="mx-4 p-4 mb-4" glow glowColor="#A855F7">
+        <GlassCard className="mx-4 p-4 mb-4" glow glowColor="#FF9500">
           <View style={styles.bannerContent}>
             <View style={styles.bannerIcon}>
-              <IconSymbol name="brain" size={24} color="#A855F7" />
+              <IconSymbol name="brain" size={24} color="#FF9500" />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.bannerTitle}>
@@ -187,26 +187,26 @@ const styles = StyleSheet.create({
   },
   backButton: {
     width: 40, height: 40, borderRadius: 12,
-    backgroundColor: '#111827', borderWidth: 1, borderColor: '#1E2D45',
+    backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E2E8F0',
     alignItems: 'center', justifyContent: 'center',
   },
-  title: { fontSize: 22, fontWeight: '700', color: '#F1F5F9' },
-  subtitle: { fontSize: 12, color: '#64748B', marginTop: 2 },
+  title: { fontSize: 22, fontWeight: '700', color: '#1E293B' },
+  subtitle: { fontSize: 12, color: '#8E8E93', marginTop: 2 },
   aiBadge: {
     flexDirection: 'row', alignItems: 'center', gap: 4,
-    backgroundColor: '#A855F722', borderRadius: 12, paddingHorizontal: 10, paddingVertical: 5,
-    borderWidth: 1, borderColor: '#A855F744',
+    backgroundColor: '#FF950022', borderRadius: 12, paddingHorizontal: 10, paddingVertical: 5,
+    borderWidth: 1, borderColor: '#FF950044',
   },
-  aiBadgeText: { fontSize: 11, color: '#A855F7', fontWeight: '600' },
+  aiBadgeText: { fontSize: 11, color: '#FF9500', fontWeight: '600' },
   bannerContainer: {},
   bannerContent: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   bannerIcon: {
     width: 48, height: 48, borderRadius: 14,
-    backgroundColor: '#A855F722', alignItems: 'center', justifyContent: 'center',
-    borderWidth: 1, borderColor: '#A855F744',
+    backgroundColor: '#FF950022', alignItems: 'center', justifyContent: 'center',
+    borderWidth: 1, borderColor: '#FF950044',
   },
-  bannerTitle: { fontSize: 15, fontWeight: '700', color: '#F1F5F9', marginBottom: 4 },
-  bannerSubtitle: { fontSize: 12, color: '#94A3B8', lineHeight: 17 },
+  bannerTitle: { fontSize: 15, fontWeight: '700', color: '#1E293B', marginBottom: 4 },
+  bannerSubtitle: { fontSize: 12, color: '#8E8E93', lineHeight: 17 },
   listContent: { paddingHorizontal: 16, paddingBottom: 100 },
   insightHeader: { flexDirection: 'row', gap: 12, marginBottom: 12 },
   insightIconContainer: {
@@ -214,22 +214,23 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
   titleRow: { marginBottom: 6 },
-  insightTitle: { fontSize: 15, fontWeight: '700', color: '#F1F5F9' },
+  insightTitle: { fontSize: 15, fontWeight: '700', color: '#1E293B' },
   metaRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   impactBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6 },
   impactText: { fontSize: 9, fontWeight: '700', letterSpacing: 0.5 },
-  timestamp: { fontSize: 11, color: '#64748B' },
-  description: { fontSize: 13, color: '#94A3B8', lineHeight: 19, marginBottom: 12 },
+  timestamp: { fontSize: 11, color: '#8E8E93' },
+  description: { fontSize: 13, color: '#8E8E93', lineHeight: 19, marginBottom: 12 },
   actionContainer: {
-    backgroundColor: '#1A2235', borderRadius: 10, padding: 12,
-    borderLeftWidth: 3, marginBottom: 10,
+    backgroundColor: '#F8F9FA', borderRadius: 10, padding: 12,
+    borderLeftWidth: 3, marginBottom: 10, borderWidth: 1, borderColor: '#E2E8F0',
   },
   actionLabel: { fontSize: 10, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 },
-  actionText: { fontSize: 12, color: '#94A3B8', lineHeight: 17 },
+  actionText: { fontSize: 12, color: '#8E8E93', lineHeight: 17 },
   affectedRow: { flexDirection: 'row', gap: 8, marginTop: 4 },
   affectedChip: {
     flexDirection: 'row', alignItems: 'center', gap: 4,
-    backgroundColor: '#1E2D45', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4,
+    backgroundColor: '#F8F9FA', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4,
+    borderWidth: 1, borderColor: '#E2E8F0',
   },
-  affectedText: { fontSize: 11, color: '#64748B' },
+  affectedText: { fontSize: 11, color: '#8E8E93' },
 });

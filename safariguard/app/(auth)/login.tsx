@@ -117,7 +117,7 @@ export default function LoginScreen() {
                 <IconSymbol
                   name={role.icon}
                   size={20}
-                  color={selectedRole === role.id ? '#3B82F6' : '#64748B'}
+                  color={selectedRole === role.id ? '#6152FF' : '#64748B'}
                 />
                 <Text style={[styles.roleLabel, selectedRole === role.id && styles.roleLabelActive]}>
                   {role.label}
@@ -221,7 +221,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A0E1A',
+    backgroundColor: '#F8F9FA',
   },
   scrollContent: {
     flexGrow: 1,
@@ -240,14 +240,14 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 24,
-    backgroundColor: '#3B82F622',
+    backgroundColor: '#6152FF15',
     borderWidth: 1,
-    borderColor: '#3B82F644',
+    borderColor: '#6152FF33',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#3B82F6',
+    shadowColor: '#6152FF',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
+    shadowOpacity: 0.2,
     shadowRadius: 16,
     elevation: 8,
   },
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 16,
-    backgroundColor: '#3B82F633',
+    backgroundColor: '#6152FF22',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: 28,
     fontWeight: '800',
-    color: '#F1F5F9',
+    color: '#1E293B',
     letterSpacing: 1,
   },
   tagline: {
@@ -291,20 +291,20 @@ const styles = StyleSheet.create({
   },
   roleCard: {
     flex: 1,
-    backgroundColor: '#111827',
+    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     padding: 12,
     alignItems: 'center',
     gap: 6,
     borderWidth: 1,
-    borderColor: '#1E2D45',
+    borderColor: '#E2E8F0',
   },
   roleCardActive: {
-    borderColor: '#3B82F6',
-    backgroundColor: '#3B82F611',
-    shadowColor: '#3B82F6',
+    borderColor: '#6152FF',
+    backgroundColor: '#6152FF11',
+    shadowColor: '#6152FF',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
   },
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   roleLabelActive: {
-    color: '#3B82F6',
+    color: '#6152FF',
   },
   roleDesc: {
     fontSize: 9,
@@ -329,10 +329,10 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#111827',
+    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#1E2D45',
+    borderColor: '#E2E8F0',
     paddingHorizontal: 14,
     height: 52,
   },
@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    color: '#F1F5F9',
+    color: '#1E293B',
     fontSize: 15,
     height: '100%',
   },
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   loginButton: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#6152FF',
     borderRadius: 14,
     height: 54,
     flexDirection: 'row',
@@ -369,9 +369,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
     marginTop: 4,
-    shadowColor: '#3B82F6',
+    shadowColor: '#6152FF',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
+    shadowOpacity: 0.2,
     shadowRadius: 12,
     elevation: 6,
   },
@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   registerLink: {
-    color: '#3B82F6',
+    color: '#6152FF',
     fontSize: 14,
     fontWeight: '600',
   },

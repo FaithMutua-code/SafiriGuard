@@ -67,7 +67,7 @@ function BarChart({ data, maxValue }: { data: { label: string; value: number; co
                 chartStyles.bar,
                 {
                   height: Math.max(4, (item.value / maxValue) * 100),
-                  backgroundColor: item.color || '#3B82F6',
+                  backgroundColor: item.color || '#6152FF',
                 },
               ]}
             />
@@ -94,7 +94,7 @@ function LineChart({ data }: { data: { hour: string; value: number }[] }) {
               style={{
                 width: '80%',
                 height: Math.max(4, (d.value / maxVal) * chartH),
-                backgroundColor: d.value >= 80 ? '#10B981' : d.value >= 60 ? '#3B82F6' : '#1E2D45',
+                backgroundColor: d.value >= 80 ? '#10B981' : d.value >= 60 ? '#6152FF' : '#E2E8F0',
                 borderRadius: 3,
               }}
             />
@@ -104,7 +104,7 @@ function LineChart({ data }: { data: { hour: string; value: number }[] }) {
       <View style={{ flexDirection: 'row', marginTop: 4 }}>
         {data.filter((_, i) => i % 3 === 0).map((d, i) => (
           <View key={i} style={{ flex: 1, alignItems: 'center' }}>
-            <Text style={{ fontSize: 8, color: '#64748B' }}>{d.hour}</Text>
+            <Text style={{ fontSize: 8, color: '#8E8E93' }}>{d.hour}</Text>
           </View>
         ))}
       </View>
@@ -118,13 +118,13 @@ export default function AnalyticsScreen() {
   const driverData = MOCK_DRIVERS.map(d => ({
     label: d.name.split(' ')[0],
     value: d.safetyScore,
-    color: d.safetyScore >= 90 ? '#10B981' : d.safetyScore >= 75 ? '#3B82F6' : '#EF4444',
+    color: d.safetyScore >= 90 ? '#10B981' : d.safetyScore >= 75 ? '#6152FF' : '#EF4444',
   }));
 
   const vehicleOccupancy = MOCK_VEHICLES.map(v => ({
     label: v.regNumber.split(' ')[0],
     value: v.maxCapacity > 0 ? Math.round((v.passengers / v.maxCapacity) * 100) : 0,
-    color: '#3B82F6',
+    color: '#6152FF',
   }));
 
   const fleetEfficiency = MOCK_VEHICLES.length
@@ -198,11 +198,11 @@ export default function AnalyticsScreen() {
               <Text style={styles.legendText}>High (≥80%)</Text>
             </View>
             <View style={styles.legendItem}>
-              <View style={[styles.legendDot, { backgroundColor: '#3B82F6' }]} />
+              <View style={[styles.legendDot, { backgroundColor: '#6152FF' }]} />
               <Text style={styles.legendText}>Medium (≥60%)</Text>
             </View>
             <View style={styles.legendItem}>
-              <View style={[styles.legendDot, { backgroundColor: '#1E2D45' }]} />
+              <View style={[styles.legendDot, { backgroundColor: '#E2E8F0' }]} />
               <Text style={styles.legendText}>Low</Text>
             </View>
           </View>
@@ -225,11 +225,11 @@ export default function AnalyticsScreen() {
                 <View style={styles.scoreBar}>
                   <View style={[styles.scoreBarFill, {
                     width: `${d.safetyScore}%` as any,
-                    backgroundColor: d.safetyScore >= 90 ? '#10B981' : d.safetyScore >= 75 ? '#3B82F6' : '#EF4444',
+                    backgroundColor: d.safetyScore >= 90 ? '#10B981' : d.safetyScore >= 75 ? '#6152FF' : '#EF4444',
                   }]} />
                 </View>
                 <Text style={[styles.scoreValue, {
-                  color: d.safetyScore >= 90 ? '#10B981' : d.safetyScore >= 75 ? '#3B82F6' : '#EF4444',
+                  color: d.safetyScore >= 90 ? '#10B981' : d.safetyScore >= 75 ? '#6152FF' : '#EF4444',
                 }]}>{d.safetyScore}</Text>
               </View>
             ))}
@@ -250,7 +250,7 @@ export default function AnalyticsScreen() {
                 <View style={styles.occBarBg}>
                   <View style={[styles.occBarFill, {
                     width: `${pct}%` as any,
-                    backgroundColor: pct >= 80 ? '#10B981' : pct >= 50 ? '#3B82F6' : '#F59E0B',
+                    backgroundColor: pct >= 80 ? '#10B981' : pct >= 50 ? '#6152FF' : '#F59E0B',
                   }]} />
                 </View>
                 <Text style={styles.occPct}>{pct}%</Text>
@@ -264,7 +264,7 @@ export default function AnalyticsScreen() {
           <Text style={styles.cardTitle}>Performance Summary</Text>
           <View style={styles.summaryGrid}>
             {[
-              { label: 'Total Trips', value: MOCK_VEHICLES.reduce((s, v) => s + v.totalTripsToday, 0), color: '#3B82F6' },
+              { label: 'Total Trips', value: MOCK_VEHICLES.reduce((s, v) => s + v.totalTripsToday, 0), color: '#6152FF' },
               { label: 'Avg Occupancy', value: `${fleetEfficiency}%`, color: '#10B981' },
               { label: 'Active Alerts', value: 0, color: '#EF4444' },
               { label: 'Top Driver', value: '—', color: '#F59E0B' },
@@ -286,7 +286,7 @@ const chartStyles = StyleSheet.create({
   barGroup: { flex: 1, alignItems: 'center', gap: 4 },
   barWrapper: { flex: 1, justifyContent: 'flex-end', width: '100%', alignItems: 'center' },
   bar: { width: '80%', borderRadius: 3, minHeight: 4 },
-  barLabel: { fontSize: 8, color: '#64748B', textAlign: 'center' },
+  barLabel: { fontSize: 8, color: '#8E8E93', textAlign: 'center' },
 });
 
 const styles = StyleSheet.create({
@@ -294,46 +294,46 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16, paddingTop: 8, paddingBottom: 12,
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
   },
-  title: { fontSize: 22, fontWeight: '700', color: '#F1F5F9' },
+  title: { fontSize: 22, fontWeight: '700', color: '#1E293B' },
   periodSelector: { flexDirection: 'row', gap: 4 },
   periodChip: {
     paddingHorizontal: 12, paddingVertical: 6, borderRadius: 16,
-    backgroundColor: '#111827', borderWidth: 1, borderColor: '#1E2D45',
+    backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E2E8F0',
   },
-  periodChipActive: { borderColor: '#3B82F6', backgroundColor: '#3B82F611' },
-  periodText: { fontSize: 12, color: '#64748B', fontWeight: '500' },
-  periodTextActive: { color: '#3B82F6' },
+  periodChipActive: { borderColor: '#6152FF', backgroundColor: '#6152FF11' },
+  periodText: { fontSize: 12, color: '#8E8E93', fontWeight: '500' },
+  periodTextActive: { color: '#6152FF' },
   content: { paddingHorizontal: 16, paddingBottom: 100 },
-  cardTitle: { fontSize: 14, fontWeight: '700', color: '#F1F5F9', marginBottom: 12 },
+  cardTitle: { fontSize: 14, fontWeight: '700', color: '#1E293B', marginBottom: 12 },
   chartHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  chartSubtitle: { fontSize: 11, color: '#64748B' },
+  chartSubtitle: { fontSize: 11, color: '#8E8E93' },
   efficiencyRow: { flexDirection: 'row', alignItems: 'center', gap: 20 },
   efficiencyStats: { flex: 1, gap: 10 },
   effStat: {},
-  effStatValue: { fontSize: 20, fontWeight: '700', color: '#F1F5F9' },
-  effStatLabel: { fontSize: 11, color: '#64748B' },
+  effStatValue: { fontSize: 20, fontWeight: '700', color: '#1E293B' },
+  effStatLabel: { fontSize: 11, color: '#8E8E93' },
   chartLegend: { flexDirection: 'row', gap: 16, marginTop: 8 },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   legendDot: { width: 8, height: 8, borderRadius: 4 },
-  legendText: { fontSize: 11, color: '#64748B' },
+  legendText: { fontSize: 11, color: '#8E8E93' },
   driverScoreList: { marginTop: 12, gap: 8 },
   driverScoreRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   driverAvatar: {
     width: 28, height: 28, borderRadius: 14,
-    backgroundColor: '#3B82F622', alignItems: 'center', justifyContent: 'center',
+    backgroundColor: '#6152FF22', alignItems: 'center', justifyContent: 'center',
   },
-  driverAvatarText: { fontSize: 12, fontWeight: '700', color: '#3B82F6' },
-  driverScoreName: { fontSize: 12, color: '#94A3B8', width: 80 },
-  scoreBar: { flex: 1, height: 6, backgroundColor: '#1E2D45', borderRadius: 3, overflow: 'hidden' },
+  driverAvatarText: { fontSize: 12, fontWeight: '700', color: '#6152FF' },
+  driverScoreName: { fontSize: 12, color: '#8E8E93', width: 80 },
+  scoreBar: { flex: 1, height: 6, backgroundColor: '#E2E8F0', borderRadius: 3, overflow: 'hidden' },
   scoreBarFill: { height: '100%', borderRadius: 3 },
   scoreValue: { fontSize: 13, fontWeight: '700', width: 28, textAlign: 'right' },
   vehicleOccRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 8 },
-  vehicleOccReg: { fontSize: 11, color: '#94A3B8', width: 72, fontFamily: 'monospace' },
-  occBarBg: { flex: 1, height: 8, backgroundColor: '#1E2D45', borderRadius: 4, overflow: 'hidden' },
+  vehicleOccReg: { fontSize: 11, color: '#8E8E93', width: 72, fontFamily: 'monospace' },
+  occBarBg: { flex: 1, height: 8, backgroundColor: '#E2E8F0', borderRadius: 4, overflow: 'hidden' },
   occBarFill: { height: '100%', borderRadius: 4 },
-  occPct: { fontSize: 12, color: '#F1F5F9', fontWeight: '600', width: 36, textAlign: 'right' },
+  occPct: { fontSize: 12, color: '#1E293B', fontWeight: '600', width: 36, textAlign: 'right' },
   summaryGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
-  summaryItem: { width: '45%', backgroundColor: '#1A2235', borderRadius: 12, padding: 12 },
+  summaryItem: { width: '45%', backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E2E8F0', borderRadius: 12, padding: 12 },
   summaryValue: { fontSize: 20, fontWeight: '700', marginBottom: 4 },
-  summaryLabel: { fontSize: 11, color: '#64748B' },
+  summaryLabel: { fontSize: 11, color: '#8E8E93' },
 });

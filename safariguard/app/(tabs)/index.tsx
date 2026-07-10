@@ -87,9 +87,9 @@ function getDashboardStats() {
 // -----------------------------------------------------------------
 
 const QUICK_ACTIONS = [
-  { id: 'fleet', label: 'Fleet', icon: 'car.2.fill', color: '#3B82F6', route: '/(tabs)/fleet' },
+  { id: 'fleet', label: 'Fleet', icon: 'car.2.fill', color: '#6152FF', route: '/(tabs)/fleet' },
   { id: 'gps', label: 'GPS Track', icon: 'map.fill', color: '#10B981', route: '/gps' },
-  { id: 'insights', label: 'AI Insights', icon: 'sparkles', color: '#A855F7', route: '/insights' },
+  { id: 'insights', label: 'AI Insights', icon: 'sparkles', color: '#FF9500', route: '/insights' },
   { id: 'alerts', label: 'Alerts', icon: 'bell.badge.fill', color: '#EF4444', route: '/alerts' },
 ];
 
@@ -116,7 +116,7 @@ export default function DashboardScreen() {
     <ScreenContainer containerClassName="bg-background">
       <ScrollView
         showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#3B82F6" />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#6152FF" />}
         contentContainerStyle={styles.scrollContent}
       >
         {/* Header */}
@@ -127,7 +127,7 @@ export default function DashboardScreen() {
             {user && <RoleBadge role={user.role} size="sm" />}
           </View>
           <TouchableOpacity style={styles.notifButton} onPress={() => router.push('/alerts' as any)}>
-            <IconSymbol name="bell.fill" size={20} color="#F1F5F9" />
+            <IconSymbol name="bell.fill" size={20} color="#1E293B" />
             {unresolvedAlerts.length > 0 && (
               <View style={styles.notifBadge}>
                 <Text style={styles.notifBadgeText}>{unresolvedAlerts.length}</Text>
@@ -143,10 +143,10 @@ export default function DashboardScreen() {
               label="Active Vehicles"
               value={stats.activeVehicles}
               icon="car.fill"
-              iconColor="#3B82F6"
+              iconColor="#6152FF"
               trend={8}
               glow
-              glowColor="#3B82F6"
+              glowColor="#6152FF"
             />
             <StatCard
               label="Active Trips"
@@ -161,7 +161,7 @@ export default function DashboardScreen() {
               label="Passengers"
               value={stats.totalPassengers}
               icon="person.3.fill"
-              iconColor="#A855F7"
+              iconColor="#FF9500"
               subtitle="Currently on board"
             />
             <StatCard
@@ -215,10 +215,10 @@ export default function DashboardScreen() {
         {/* AI Insight Banner */}
         {topInsight && (
           <TouchableOpacity onPress={() => router.push('/insights' as any)} activeOpacity={0.85}>
-            <GlassCard className="p-4 mb-6" glow glowColor="#A855F7">
+            <GlassCard className="p-4 mb-6" glow glowColor="#FF9500">
               <View style={styles.insightHeader}>
                 <View style={styles.insightIconContainer}>
-                  <IconSymbol name="sparkles" size={18} color="#A855F7" />
+                  <IconSymbol name="sparkles" size={18} color="#FF9500" />
                 </View>
                 <Text style={styles.insightBadge}>AI Insight</Text>
                 <View style={[styles.impactBadge, { backgroundColor: '#EF444422' }]}>
@@ -229,7 +229,7 @@ export default function DashboardScreen() {
               <Text style={styles.insightDesc} numberOfLines={2}>{topInsight.description}</Text>
               <View style={styles.insightFooter}>
                 <Text style={styles.insightAction} numberOfLines={1}>{topInsight.suggestedAction}</Text>
-                <IconSymbol name="chevron.right" size={14} color="#A855F7" />
+                <IconSymbol name="chevron.right" size={14} color="#FF9500" />
               </View>
             </GlassCard>
           </TouchableOpacity>
@@ -257,7 +257,7 @@ export default function DashboardScreen() {
                   </View>
                   <View style={styles.vehicleStats}>
                     <Text style={styles.vehiclePax}>
-                      <Text style={{ color: '#3B82F6' }}>{vehicle.passengers}</Text>/{vehicle.maxCapacity} pax
+                      <Text style={{ color: '#6152FF' }}>{vehicle.passengers}</Text>/{vehicle.maxCapacity} pax
                     </Text>
                     <StatusBadge status={vehicle.status} size="sm" />
                   </View>
@@ -276,7 +276,7 @@ export default function DashboardScreen() {
             </TouchableOpacity>
           </View>
           {unresolvedAlerts.slice(0, 2).map(alert => {
-            const alertColors = { critical: '#EF4444', warning: '#F59E0B', info: '#3B82F6' };
+            const alertColors = { critical: '#EF4444', warning: '#F59E0B', info: '#6152FF' };
             const color = alertColors[alert.severity];
             return (
               <GlassCard key={alert.id} className="p-3 mb-2">
@@ -305,11 +305,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingTop: 8,
   },
-  greeting: { fontSize: 13, color: '#64748B', marginBottom: 2 },
-  userName: { fontSize: 22, fontWeight: '700', color: '#F1F5F9', marginBottom: 6 },
+  greeting: { fontSize: 13, color: '#8E8E93', marginBottom: 2 },
+  userName: { fontSize: 22, fontWeight: '700', color: '#1E293B', marginBottom: 6 },
   notifButton: {
     width: 44, height: 44, borderRadius: 14,
-    backgroundColor: '#111827', borderWidth: 1, borderColor: '#1E2D45',
+    backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E2E8F0',
     alignItems: 'center', justifyContent: 'center',
   },
   notifBadge: {
@@ -322,8 +322,8 @@ const styles = StyleSheet.create({
   statsRow: { flexDirection: 'row', gap: 8 },
   section: { marginBottom: 20 },
   sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  sectionTitle: { fontSize: 16, fontWeight: '700', color: '#F1F5F9' },
-  seeAll: { fontSize: 13, color: '#3B82F6', fontWeight: '600' },
+  sectionTitle: { fontSize: 16, fontWeight: '700', color: '#1E293B' },
+  seeAll: { fontSize: 13, color: '#6152FF', fontWeight: '600' },
   quickActionsGrid: { flexDirection: 'row', justifyContent: 'space-between' },
   quickActionItem: { alignItems: 'center', gap: 8, flex: 1 },
   quickActionIcon: {
@@ -331,28 +331,28 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
     borderWidth: 1,
   },
-  quickActionLabel: { fontSize: 11, color: '#94A3B8', fontWeight: '500', textAlign: 'center' },
+  quickActionLabel: { fontSize: 11, color: '#8E8E93', fontWeight: '500', textAlign: 'center' },
   insightHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 },
   insightIconContainer: {
     width: 30, height: 30, borderRadius: 8,
-    backgroundColor: '#A855F722', alignItems: 'center', justifyContent: 'center',
+    backgroundColor: '#FF950022', alignItems: 'center', justifyContent: 'center',
   },
-  insightBadge: { fontSize: 11, color: '#A855F7', fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5, flex: 1 },
+  insightBadge: { fontSize: 11, color: '#FF9500', fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5, flex: 1 },
   impactBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6 },
   impactText: { fontSize: 10, fontWeight: '600' },
-  insightTitle: { fontSize: 15, fontWeight: '700', color: '#F1F5F9', marginBottom: 6 },
-  insightDesc: { fontSize: 13, color: '#94A3B8', lineHeight: 18, marginBottom: 10 },
+  insightTitle: { fontSize: 15, fontWeight: '700', color: '#1E293B', marginBottom: 6 },
+  insightDesc: { fontSize: 13, color: '#8E8E93', lineHeight: 18, marginBottom: 10 },
   insightFooter: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  insightAction: { fontSize: 12, color: '#A855F7', flex: 1 },
+  insightAction: { fontSize: 12, color: '#FF9500', flex: 1 },
   vehicleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   vehicleInfo: {},
-  vehicleReg: { fontSize: 14, fontWeight: '700', color: '#F1F5F9', letterSpacing: 0.5, fontFamily: 'monospace' },
-  vehicleDriver: { fontSize: 11, color: '#64748B', marginTop: 2 },
+  vehicleReg: { fontSize: 14, fontWeight: '700', color: '#1E293B', letterSpacing: 0.5, fontFamily: 'monospace' },
+  vehicleDriver: { fontSize: 11, color: '#8E8E93', marginTop: 2 },
   vehicleStats: { alignItems: 'flex-end', gap: 4 },
-  vehiclePax: { fontSize: 12, color: '#94A3B8' },
+  vehiclePax: { fontSize: 12, color: '#8E8E93' },
   alertRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   alertDot: { width: 8, height: 8, borderRadius: 4 },
-  alertVehicle: { fontSize: 13, fontWeight: '600', color: '#F1F5F9', marginBottom: 2 },
-  alertDesc: { fontSize: 11, color: '#64748B' },
-  alertTime: { fontSize: 10, color: '#64748B' },
+  alertVehicle: { fontSize: 13, fontWeight: '600', color: '#1E293B', marginBottom: 2 },
+  alertDesc: { fontSize: 11, color: '#8E8E93' },
+  alertTime: { fontSize: 10, color: '#8E8E93' },
 });

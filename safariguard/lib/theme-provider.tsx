@@ -17,33 +17,33 @@ export type ColorScheme = "light" | "dark";
 
 const SchemeColors = {
   light: {
-    primary: "#3B82F6",
-    background: "#FFFFFF",
-    surface: "#F8FAFC",
-    foreground: "#0F172A",
-    muted: "#64748B",
+    primary: "#6152FF",
+    background: "#F8F9FA",
+    surface: "#FFFFFF",
+    foreground: "#1E293B",
+    muted: "#8E8E93",
     border: "#E2E8F0",
-    success: "#10B981",
-    warning: "#F59E0B",
-    error: "#EF4444",
-    accent: "#8B5CF6",
+    success: "#34C759",
+    warning: "#FF9500",
+    error: "#FF3B30",
+    accent: "#FF9500",
     elevated: "#FFFFFF",
-    tint: "#2563EB",
+    tint: "#6152FF",
   },
 
   dark: {
-    primary: "#3B82F6",
-    background: "#0F172A",
-    surface: "#162032",
-    foreground: "#F8FAFC",
-    muted: "#94A3B8",
-    border: "#334155",
-    success: "#10B981",
-    warning: "#F59E0B",
-    error: "#EF4444",
-    accent: "#8B5CF6",
-    elevated: "#1E293B",
-    tint: "#60A5FA",
+    primary: "#6152FF",
+    background: "#F8F9FA",
+    surface: "#FFFFFF",
+    foreground: "#1E293B",
+    muted: "#8E8E93",
+    border: "#E2E8F0",
+    success: "#34C759",
+    warning: "#FF9500",
+    error: "#FF3B30",
+    accent: "#FF9500",
+    elevated: "#FFFFFF",
+    tint: "#6152FF",
   },
 };
 
@@ -59,10 +59,8 @@ export function ThemeProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const systemScheme = useSystemColorScheme() ?? "light";
-
   const [colorScheme, setColorSchemeState] =
-    useState<ColorScheme>(systemScheme);
+    useState<ColorScheme>("light");
 
   const applyScheme = useCallback((scheme: ColorScheme) => {
     nativewindColorScheme.set(scheme);

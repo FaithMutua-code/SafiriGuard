@@ -67,7 +67,7 @@ export default function GPSScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <IconSymbol name="arrow.left" size={20} color="#F1F5F9" />
+          <IconSymbol name="arrow.left" size={20} color="#1E293B" />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>GPS Tracking</Text>
@@ -121,7 +121,7 @@ export default function GPSScreen() {
 
           {/* Map Label */}
           <View style={styles.mapLabel}>
-            <IconSymbol name="map.fill" size={14} color="#1E2D45" />
+            <IconSymbol name="map.fill" size={14} color="#1E293B" />
             <Text style={styles.mapLabelText}>Nairobi Metropolitan Area</Text>
           </View>
 
@@ -169,7 +169,7 @@ export default function GPSScreen() {
           </View>
         </View>
         <View style={styles.locationRow}>
-          <IconSymbol name="location.fill" size={12} color="#3B82F6" />
+          <IconSymbol name="location.fill" size={12} color="#6152FF" />
           <Text style={styles.locationText}>{selected.location.address}</Text>
         </View>
       </GlassCard>
@@ -195,7 +195,7 @@ export default function GPSScreen() {
               backgroundColor: item.status === 'active' ? '#10B981' : item.status === 'idle' ? '#F59E0B' : '#EF4444',
             }]} />
             <View>
-              <Text style={[styles.chipReg, selectedVehicle === item.id && { color: '#3B82F6' }]}>
+              <Text style={[styles.chipReg, selectedVehicle === item.id && { color: '#6152FF' }]}>
                 {item.regNumber}
               </Text>
               <Text style={styles.chipDriver}>{item.driverName.split(' ')[0]}</Text>
@@ -218,11 +218,11 @@ const styles = StyleSheet.create({
   },
   backButton: {
     width: 40, height: 40, borderRadius: 12,
-    backgroundColor: '#111827', borderWidth: 1, borderColor: '#1E2D45',
+    backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E2E8F0',
     alignItems: 'center', justifyContent: 'center',
   },
-  title: { fontSize: 22, fontWeight: '700', color: '#F1F5F9' },
-  subtitle: { fontSize: 12, color: '#64748B', marginTop: 2 },
+  title: { fontSize: 22, fontWeight: '700', color: '#1E293B' },
+  subtitle: { fontSize: 12, color: '#8E8E93', marginTop: 2 },
   liveBadge: {
     flexDirection: 'row', alignItems: 'center', gap: 5,
     backgroundColor: '#EF444422', borderRadius: 10, paddingHorizontal: 10, paddingVertical: 5,
@@ -233,14 +233,14 @@ const styles = StyleSheet.create({
   mapContainer: { marginHorizontal: 16, marginBottom: 12, borderRadius: 16, overflow: 'hidden' },
   mapBg: {
     height: 220,
-    backgroundColor: '#0D1526',
+    backgroundColor: '#F8F9FA',
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#1E2D45',
+    borderColor: '#E2E8F0',
     position: 'relative',
     overflow: 'hidden',
   },
-  gridLine: { position: 'absolute', backgroundColor: '#1E2D4540' },
+  gridLine: { position: 'absolute', backgroundColor: '#E2E8F0' },
   gridLineH: { left: 0, right: 0, height: 1 },
   gridLineV: { top: 0, bottom: 0, width: 1 },
   vehicleMarker: {
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
   },
   vehicleMarkerSelected: {
     width: 36, height: 36, borderRadius: 18,
-    borderColor: '#F1F5F9', borderWidth: 3,
+    borderColor: '#1E293B', borderWidth: 3,
     shadowOpacity: 0.8, shadowRadius: 8,
     transform: [{ translateX: -18 }, { translateY: -18 }],
   },
@@ -269,35 +269,35 @@ const styles = StyleSheet.create({
     position: 'absolute', bottom: 8, left: 12,
     flexDirection: 'row', alignItems: 'center', gap: 4,
   },
-  mapLabelText: { fontSize: 10, color: '#1E2D45' },
+  mapLabelText: { fontSize: 10, color: '#8E8E93' },
   mapLegend: {
     position: 'absolute', bottom: 8, right: 12,
     flexDirection: 'row', gap: 10,
-    backgroundColor: '#0A0E1A88', borderRadius: 8, padding: 6,
+    backgroundColor: '#FFFFFF88', borderRadius: 8, padding: 6,
   },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   legendDot: { width: 6, height: 6, borderRadius: 3 },
-  legendText: { fontSize: 9, color: '#94A3B8' },
+  legendText: { fontSize: 9, color: '#8E8E93' },
   selectedHeader: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12,
   },
-  selectedReg: { fontSize: 18, fontWeight: '700', color: '#F1F5F9', letterSpacing: 1, fontFamily: 'monospace' },
-  selectedRoute: { fontSize: 12, color: '#64748B', marginTop: 2 },
+  selectedReg: { fontSize: 18, fontWeight: '700', color: '#1E293B', letterSpacing: 1, fontFamily: 'monospace' },
+  selectedRoute: { fontSize: 12, color: '#8E8E93', marginTop: 2 },
   selectedStats: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
   selectedStat: { alignItems: 'center' },
-  selectedStatValue: { fontSize: 15, fontWeight: '700', color: '#F1F5F9' },
-  selectedStatLabel: { fontSize: 10, color: '#64748B', marginTop: 2 },
+  selectedStatValue: { fontSize: 15, fontWeight: '700', color: '#1E293B' },
+  selectedStatLabel: { fontSize: 10, color: '#8E8E93', marginTop: 2 },
   locationRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  locationText: { fontSize: 12, color: '#64748B' },
-  listTitle: { fontSize: 14, fontWeight: '700', color: '#F1F5F9', paddingHorizontal: 16, marginBottom: 8 },
+  locationText: { fontSize: 12, color: '#8E8E93' },
+  listTitle: { fontSize: 14, fontWeight: '700', color: '#1E293B', paddingHorizontal: 16, marginBottom: 8 },
   vehicleListContent: { paddingHorizontal: 16, paddingBottom: 16, gap: 8 },
   vehicleChip: {
     flexDirection: 'row', alignItems: 'center', gap: 8,
-    backgroundColor: '#111827', borderRadius: 12, padding: 10,
-    borderWidth: 1, borderColor: '#1E2D45',
+    backgroundColor: '#FFFFFF', borderRadius: 12, padding: 10,
+    borderWidth: 1, borderColor: '#E2E8F0',
   },
-  vehicleChipSelected: { borderColor: '#3B82F6', backgroundColor: '#3B82F611' },
+  vehicleChipSelected: { borderColor: '#6152FF', backgroundColor: '#6152FF11' },
   chipDot: { width: 8, height: 8, borderRadius: 4 },
-  chipReg: { fontSize: 13, fontWeight: '600', color: '#F1F5F9', fontFamily: 'monospace' },
-  chipDriver: { fontSize: 10, color: '#64748B', marginTop: 1 },
+  chipReg: { fontSize: 13, fontWeight: '600', color: '#1E293B', fontFamily: 'monospace' },
+  chipDriver: { fontSize: 10, color: '#8E8E93', marginTop: 1 },
 });

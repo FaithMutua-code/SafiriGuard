@@ -15,15 +15,15 @@ export function GlassCard({ className, children, glow = false, glowColor, style,
       style={[
         styles.card,
         glow && {
-          shadowColor: glowColor || '#3B82F6',
-          shadowOffset: { width: 0, height: 0 },
-          shadowOpacity: 0.3,
-          shadowRadius: 12,
-          elevation: 8,
+          shadowColor: glowColor || '#6152FF',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.15,
+          shadowRadius: 16,
+          elevation: 6,
         },
         style,
       ]}
-      className={cn("bg-surface rounded-2xl border border-border overflow-hidden", className)}
+      className={cn("bg-surface rounded-[24px] overflow-hidden", className)}
       {...props}
     >
       {children}
@@ -33,10 +33,10 @@ export function GlassCard({ className, children, glow = false, glowColor, style,
 
 const styles = StyleSheet.create({
   card: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowColor: '#1E293B',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.06,
+    shadowRadius: 24,
+    elevation: 3,
   },
 });

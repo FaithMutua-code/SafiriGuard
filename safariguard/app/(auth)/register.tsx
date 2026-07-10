@@ -80,7 +80,7 @@ export default function RegisterScreen() {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <IconSymbol name="arrow.left" size={20} color="#F1F5F9" />
+            <IconSymbol name="arrow.left" size={20} color="#1E293B" />
           </TouchableOpacity>
           <Text style={styles.title}>Create Account</Text>
           <Text style={styles.subtitle}>Join SafariGuard today</Text>
@@ -216,38 +216,38 @@ function InputField({
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0A0E1A' },
+  container: { flex: 1, backgroundColor: '#F8F9FA' },
   scrollContent: { flexGrow: 1, paddingHorizontal: 24, paddingTop: 60, paddingBottom: 40 },
   header: { marginBottom: 32 },
   backButton: {
     width: 40, height: 40, borderRadius: 12,
-    backgroundColor: '#111827', borderWidth: 1, borderColor: '#1E2D45',
+    backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E2E8F0',
     alignItems: 'center', justifyContent: 'center', marginBottom: 20,
   },
-  title: { fontSize: 28, fontWeight: '800', color: '#F1F5F9' },
-  subtitle: { fontSize: 14, color: '#64748B', marginTop: 4 },
+  title: { fontSize: 28, fontWeight: '800', color: '#1E293B' },
+  subtitle: { fontSize: 14, color: '#8E8E93', marginTop: 4 },
   section: { marginBottom: 20 },
   sectionLabel: {
-    fontSize: 12, color: '#64748B', fontWeight: '600',
+    fontSize: 12, color: '#8E8E93', fontWeight: '600',
     textTransform: 'uppercase', letterSpacing: 1, marginBottom: 10,
   },
   roleRow: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
   roleChip: {
     paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20,
-    backgroundColor: '#111827', borderWidth: 1, borderColor: '#1E2D45',
+    backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E2E8F0',
   },
-  roleChipActive: { borderColor: '#3B82F6', backgroundColor: '#3B82F611' },
-  roleChipText: { fontSize: 13, color: '#64748B', fontWeight: '500' },
-  roleChipTextActive: { color: '#3B82F6' },
+  roleChipActive: { borderColor: '#6152FF', backgroundColor: '#6152FF11' },
+  roleChipText: { fontSize: 13, color: '#8E8E93', fontWeight: '500' },
+  roleChipTextActive: { color: '#6152FF' },
   form: { gap: 12, marginBottom: 24 },
   inputWrapper: {
     flexDirection: 'row', alignItems: 'center',
-    backgroundColor: '#111827', borderRadius: 12,
-    borderWidth: 1, borderColor: '#1E2D45',
+    backgroundColor: '#FFFFFF', borderRadius: 12,
+    borderWidth: 1, borderColor: '#E2E8F0',
     paddingHorizontal: 14, height: 52,
   },
   inputIcon: { marginRight: 10 },
-  input: { color: '#F1F5F9', fontSize: 15, height: '100%' },
+  input: { color: '#1E293B', fontSize: 15, height: '100%' },
   eyeButton: { padding: 4 },
   errorContainer: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
@@ -255,14 +255,14 @@ const styles = StyleSheet.create({
   },
   errorText: { color: '#EF4444', fontSize: 13 },
   registerButton: {
-    backgroundColor: '#3B82F6', borderRadius: 14, height: 54,
+    backgroundColor: '#6152FF', borderRadius: 14, height: 54,
     alignItems: 'center', justifyContent: 'center', marginTop: 4,
-    shadowColor: '#3B82F6', shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4, shadowRadius: 12, elevation: 6,
+    shadowColor: '#6152FF', shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2, shadowRadius: 12, elevation: 6,
   },
   buttonDisabled: { opacity: 0.7 },
   registerButtonText: { color: '#fff', fontSize: 16, fontWeight: '700', letterSpacing: 0.5 },
   loginRow: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
-  loginText: { color: '#64748B', fontSize: 14 },
-  loginLink: { color: '#3B82F6', fontSize: 14, fontWeight: '600' },
+  loginText: { color: '#8E8E93', fontSize: 14 },
+  loginLink: { color: '#6152FF', fontSize: 14, fontWeight: '600' },
 });

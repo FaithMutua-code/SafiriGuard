@@ -55,7 +55,7 @@ export default function AlertsScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <IconSymbol name="arrow.left" size={20} color="#F1F5F9" />
+          <IconSymbol name="arrow.left" size={20} color="#1E293B" />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>Alerts Center</Text>
@@ -73,8 +73,8 @@ export default function AlertsScreen() {
           <Text style={[styles.summaryCount, { color: '#F59E0B' }]}>{counts.warning}</Text>
           <Text style={styles.summaryLabel}>Warning</Text>
         </View>
-        <View style={[styles.summaryCard, { borderColor: '#3B82F633' }]}>
-          <Text style={[styles.summaryCount, { color: '#3B82F6' }]}>{counts.info}</Text>
+        <View style={[styles.summaryCard, { borderColor: '#6152FF33' }]}>
+          <Text style={[styles.summaryCount, { color: '#6152FF' }]}>{counts.info}</Text>
           <Text style={styles.summaryLabel}>Info</Text>
         </View>
         <View style={[styles.summaryCard, { borderColor: '#10B98133' }]}>
@@ -132,11 +132,11 @@ const styles = StyleSheet.create({
   },
   backButton: {
     width: 40, height: 40, borderRadius: 12,
-    backgroundColor: '#111827', borderWidth: 1, borderColor: '#1E2D45',
+    backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E2E8F0',
     alignItems: 'center', justifyContent: 'center',
   },
-  title: { fontSize: 22, fontWeight: '700', color: '#F1F5F9' },
-  subtitle: { fontSize: 12, color: '#64748B', marginTop: 2 },
+  title: { fontSize: 22, fontWeight: '700', color: '#1E293B' },
+  subtitle: { fontSize: 12, color: '#8E8E93', marginTop: 2 },
   summaryRow: {
     flexDirection: 'row',
     paddingHorizontal: 16,
@@ -145,14 +145,14 @@ const styles = StyleSheet.create({
   },
   summaryCard: {
     flex: 1,
-    backgroundColor: '#111827',
+    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     padding: 10,
     alignItems: 'center',
     borderWidth: 1,
   },
   summaryCount: { fontSize: 20, fontWeight: '700' },
-  summaryLabel: { fontSize: 10, color: '#64748B', marginTop: 2 },
+  summaryLabel: { fontSize: 10, color: '#8E8E93', marginTop: 2 },
   filtersRow: {
     flexDirection: 'row',
     paddingHorizontal: 16,
@@ -162,13 +162,13 @@ const styles = StyleSheet.create({
   },
   filterChip: {
     paddingHorizontal: 12, paddingVertical: 6, borderRadius: 16,
-    backgroundColor: '#111827', borderWidth: 1, borderColor: '#1E2D45',
+    backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E2E8F0',
   },
-  filterChipActive: { borderColor: '#3B82F6', backgroundColor: '#3B82F611' },
-  filterText: { fontSize: 12, color: '#64748B', fontWeight: '500' },
-  filterTextActive: { color: '#3B82F6' },
+  filterChipActive: { borderColor: '#6152FF', backgroundColor: '#6152FF11' },
+  filterText: { fontSize: 12, color: '#8E8E93', fontWeight: '500' },
+  filterTextActive: { color: '#6152FF' },
   listContent: { paddingHorizontal: 16, paddingBottom: 100 },
   emptyContainer: { alignItems: 'center', paddingTop: 60, gap: 10 },
-  emptyTitle: { fontSize: 18, fontWeight: '700', color: '#F1F5F9' },
-  emptyText: { fontSize: 14, color: '#64748B' },
+  emptyTitle: { fontSize: 18, fontWeight: '700', color: '#1E293B' },
+  emptyText: { fontSize: 14, color: '#8E8E93' },
 });

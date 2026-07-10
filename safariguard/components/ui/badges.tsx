@@ -235,7 +235,7 @@ export function ShimmerLoader({
           width: width as any,
           height,
           borderRadius,
-          backgroundColor: "#1E2D45",
+          backgroundColor: "#E2E8F0",
           opacity,
         },
         style,
