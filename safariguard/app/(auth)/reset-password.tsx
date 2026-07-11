@@ -1,29 +1,13 @@
+// app/(auth)/reset-password.tsx  (or wherever this screen lives)
 import React, { useState } from "react";
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
+  View, Text, TextInput, TouchableOpacity, ScrollView,
+  StyleSheet, ActivityIndicator, KeyboardAvoidingView, Platform,
 } from "react-native";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-
-// ---- Placeholder auth (replace with real backend) ----
-function useAppAuth() {
-  return {
-    resetPassword: async (email: string) => {
-      // TODO: replace with real password reset call
-      return true;
-    },
-  };
-}
-// --------------------------------------------------------
+import { useAppAuth } from "@/context/AuthContext";
 
 export default function ResetPasswordScreen() {
   const { resetPassword } = useAppAuth();
@@ -42,8 +26,8 @@ export default function ResetPasswordScreen() {
     try {
       await resetPassword(email);
       setSent(true);
-    } catch {
-      setError('Something went wrong. Please try again.');
+    } catch (e: any) {
+      setError(e?.response?.data?.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -60,7 +44,6 @@ export default function ResetPasswordScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <IconSymbol name="arrow.left" size={20} color="#1E293B" />
@@ -91,51 +74,47 @@ export default function ResetPasswordScreen() {
         </View>
 
         {!sent ? (
-          <>
-            {/* Form */}
-            <View style={styles.form}>
-              <View style={styles.inputWrapper}>
-                <View style={styles.inputIcon}>
-                  <IconSymbol name="envelope.fill" size={16} color="#64748B" />
-                </View>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Email address"
-                  placeholderTextColor="#64748B"
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  returnKeyType="done"
-                  onSubmitEditing={handleReset}
-                />
+          <View style={styles.form}>
+            <View style={styles.inputWrapper}>
+              <View style={styles.inputIcon}>
+                <IconSymbol name="envelope.fill" size={16} color="#64748B" />
               </View>
-
-              {error ? (
-                <View style={styles.errorContainer}>
-                  <IconSymbol name="xmark.circle.fill" size={14} color="#EF4444" />
-                  <Text style={styles.errorText}>{error}</Text>
-                </View>
-              ) : null}
-
-              <TouchableOpacity
-                onPress={handleReset}
-                activeOpacity={0.85}
-                style={[styles.submitButton, loading && styles.buttonDisabled]}
-                disabled={loading}
-              >
-                {loading ? (
-                  <ActivityIndicator color="#fff" size="small" />
-                ) : (
-                  <Text style={styles.submitButtonText}>Send Reset Link</Text>
-                )}
-              </TouchableOpacity>
+              <TextInput
+                style={styles.input}
+                placeholder="Email address"
+                placeholderTextColor="#64748B"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                returnKeyType="done"
+                onSubmitEditing={handleReset}
+              />
             </View>
-          </>
+
+            {error ? (
+              <View style={styles.errorContainer}>
+                <IconSymbol name="xmark.circle.fill" size={14} color="#EF4444" />
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            ) : null}
+
+            <TouchableOpacity
+              onPress={handleReset}
+              activeOpacity={0.85}
+              style={[styles.submitButton, loading && styles.buttonDisabled]}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator color="#fff" size="small" />
+              ) : (
+                <Text style={styles.submitButtonText}>Send Reset Link</Text>
+              )}
+            </TouchableOpacity>
+          </View>
         ) : (
           <>
-            {/* Success state */}
             <TouchableOpacity
               onPress={() => router.replace('/(auth)/login' as any)}
               activeOpacity={0.85}
@@ -150,7 +129,6 @@ export default function ResetPasswordScreen() {
           </>
         )}
 
-        {/* Login link */}
         {!sent && (
           <View style={styles.loginRow}>
             <Text style={styles.loginText}>Remembered your password? </Text>

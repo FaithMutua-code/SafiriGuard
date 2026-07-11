@@ -7,5 +7,31 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    //
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $user = User::where('email', $data['email'])->first();
+
+        if (!$user || !Hash::check($data['password'], $user->password)) {
+            throw ValidationException::withMessages(['email' => ['Invalid credentials.']]);
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'user' => $user->load('sacco', 'vehicleOwner', 'driver'),
+            'token' => $token,
+        ]);
+    }
+
+    public function destroy(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+        return response()->json(['message' => 'Logged out']);
+    }
 }
