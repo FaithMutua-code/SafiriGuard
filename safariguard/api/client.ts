@@ -1,10 +1,10 @@
 // api/client.ts
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { API_BASE_URL } from '@/config/env';
 
-export const API_BASE_URL = 'http://192.168.0.110:8000/api'; // physical device can't hit localhost — space removed, this was breaking every request
 
-const api = axios.create({ baseURL: API_BASE_URL });
+const api = axios.create({ baseURL: API_BASE_URL, timeout: 10000 });
 
 // ---- Request interceptor: attach token + log outgoing requests ----
 api.interceptors.request.use(

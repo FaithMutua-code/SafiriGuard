@@ -1,22 +1,19 @@
 <?php
-// app/Http/Controllers/Api/Auth/ResetPasswordController.php
+// app/Http/Controllers/Api/Auth/VerifyOtpController.php
 
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
-class ResetPasswordController extends Controller
+class VerifyOtpController extends Controller
 {
     public function store(Request $request)
     {
         $data = $request->validate([
             'email' => 'required|email',
             'otp' => 'required|string',
-            'password' => 'required|min:8|confirmed',
         ]);
 
         $record = DB::table('password_reset_otps')
@@ -29,19 +26,9 @@ class ResetPasswordController extends Controller
         }
 
         if (now()->greaterThan($record->expires_at)) {
-            DB::table('password_reset_otps')->where('email', $data['email'])->delete();
             return response()->json(['message' => 'This code has expired. Please request a new one.'], 422);
         }
 
-        $user = User::where('email', $data['email'])->first();
-        if (!$user) {
-            return response()->json(['message' => 'Invalid code.'], 422);
-        }
-
-        $user->forceFill(['password' => Hash::make($data['password'])])->save();
-
-        DB::table('password_reset_otps')->where('email', $data['email'])->delete();
-
-        return response()->json(['message' => 'Password reset successful. You can now log in.']);
+        return response()->json(['message' => 'Code is valid.']);
     }
 }

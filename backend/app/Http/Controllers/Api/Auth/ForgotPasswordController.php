@@ -1,24 +1,40 @@
 <?php
+// app/Http/Controllers/Api/Auth/ForgotPasswordController.php
 
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PasswordResetOtpMail;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class ForgotPasswordController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate(['email' => 'required|email']);
+        $data = $request->validate(['email' => 'required|email']);
 
-        $status = Password::sendResetLink($request->only('email'));
+        $user = User::where('email', $data['email'])->first();
 
-        if ($status !== Password::RESET_LINK_SENT) {
-            // Don't reveal whether the email exists — same generic response either way
-            return response()->json(['message' => 'If that email exists, a reset link has been sent.']);
+        if (!$user) {
+            return response()->json(['message' => 'If that email exists, a code has been sent.']);
         }
 
-        return response()->json(['message' => 'Reset link sent.']);
+        $otp = (string) random_int(100000, 999999);
+
+        DB::table('password_reset_otps')->where('email', $data['email'])->delete();
+        DB::table('password_reset_otps')->insert([
+            'email' => $data['email'],
+            'otp' => $otp,
+            'expires_at' => now()->addMinutes(10),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        Mail::to($user->email)->queue(new PasswordResetOtpMail($otp));
+
+        return response()->json(['message' => 'If that email exists, a code has been sent.']);
     }
 }
