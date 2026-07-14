@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Auth\{
     ResetPasswordController
 };
 use App\Http\Controllers\Api\{SaccoController, VehicleController, TripController};
+use Illuminate\Http\Request;
 
 Route::get('/saccos', [SaccoController::class, 'index']);
 Route::post('/register/manager', [RegisterManagerController::class, 'store']);

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\VehicleOwner;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class RegisterOwnerController extends Controller
 {
-
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -15,7 +18,7 @@ class RegisterOwnerController extends Controller
             'email' => 'required|email|unique:users',
             'phone' => 'nullable|string',
             'password' => 'required|min:8',
-            'sacco_id' => 'required|exists:saccos,id', // <-- comes from the dropdown, not free text
+            'sacco_id' => 'required|exists:saccos,id',
             'id_number' => 'required|string|unique:vehicle_owners,id_number',
             'next_of_kin' => 'nullable|string',
         ]);

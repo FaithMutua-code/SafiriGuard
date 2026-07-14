@@ -33,7 +33,7 @@ class ForgotPasswordController extends Controller
             'updated_at' => now(),
         ]);
 
-        Mail::to($user->email)->queue(new PasswordResetOtpMail($otp));
+        Mail::to($user->email)->send(new PasswordResetOtpMail($otp));
 
         return response()->json(['message' => 'If that email exists, a code has been sent.']);
     }

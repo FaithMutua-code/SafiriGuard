@@ -23,6 +23,13 @@ interface AuthContextValue {
   registerManager: (payload: Record<string, any>) => Promise<void>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  verifyOtp: (email: string, otp: string) => Promise<void>;
+  confirmPasswordReset: (
+    email: string,
+    otp: string,
+    password: string,
+    password_confirmation: string
+  ) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -70,6 +77,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await api.post('/forgot-password', { email });
   };
 
+  const verifyOtp = async (email: string, otp: string) => {
+    await api.post('/verify-otp', { email, otp });
+  };
+
+  const confirmPasswordReset = async (
+    email: string,
+    otp: string,
+    password: string,
+    password_confirmation: string
+  ) => {
+    await api.post('/reset-password', { email, otp, password, password_confirmation });
+  };
+
   const logout = async () => {
     try { await api.post('/logout'); } catch {}
     await SecureStore.deleteItemAsync('auth_token');
@@ -78,7 +98,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, login, registerOwner, registerManager, logout, resetPassword }}
+      value={{
+        user,
+        loading,
+        login,
+        registerOwner,
+        registerManager,
+        logout,
+        resetPassword,
+        verifyOtp,
+        confirmPasswordReset,
+      }}
     >
       {children}
     </AuthContext.Provider>

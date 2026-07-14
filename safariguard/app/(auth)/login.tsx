@@ -100,6 +100,13 @@ export default function LoginScreen() {
             </TouchableOpacity>
           </View>
 
+          <TouchableOpacity
+            onPress={() => router.push("/(auth)/reset-password" as any)}
+            style={styles.forgotButton}
+          >
+            <Text style={styles.forgotText}>Forgot password?</Text>
+          </TouchableOpacity>
+
           {error ? (
             <View style={styles.errorContainer}>
               <IconSymbol name="xmark.circle.fill" size={14} color="#EF4444" />
@@ -145,6 +152,8 @@ const styles = StyleSheet.create({
   inputIcon: { marginRight: 10 },
   input: { flex: 1, color: "#1E293B", fontSize: 15, height: "100%" },
   eyeButton: { padding: 4 },
+  forgotButton: { alignSelf: "flex-end", marginTop: -2 },
+  forgotText: { color: "#6152FF", fontSize: 13, fontWeight: "600" },
   errorContainer: { flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: "#EF444411", borderRadius: 8, padding: 10 },
   errorText: { color: "#EF4444", fontSize: 13 },
   loginButton: { backgroundColor: "#6152FF", borderRadius: 14, height: 54, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 4, shadowColor: "#6152FF", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 12, elevation: 6 },
