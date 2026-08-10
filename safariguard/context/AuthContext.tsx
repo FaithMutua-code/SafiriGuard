@@ -21,7 +21,6 @@ interface RegisterOwnerPayload {
   email: string;
   phone?: string;
   password: string;
-  sacco_id: number;
   id_number: string;
 }
 
@@ -60,7 +59,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // Non-owner accounts should not use the mobile app
             await SecureStore.deleteItemAsync('auth_token');
           }
-        } catch {
+        } catch (err) {
+          console.error('Session restore failed:', err);
           await SecureStore.deleteItemAsync('auth_token');
         }
       }
@@ -106,7 +106,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = async () => {
-    try { await api.post('/logout'); } catch {}
+    try {
+      await api.post('/logout');
+    } catch (err) {
+      console.error('Logout request failed:', err);
+    }
     await SecureStore.deleteItemAsync('auth_token');
     setUser(null);
   };
