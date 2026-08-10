@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { API_BASE_URL } from '@/config/env';
 
-
+// eslint-disable-next-line import/no-named-as-default-member
 const api = axios.create({ baseURL: API_BASE_URL, timeout: 10000 });
 
 // ---- Request interceptor: attach token + log outgoing requests ----

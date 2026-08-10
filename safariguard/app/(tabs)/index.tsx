@@ -28,7 +28,7 @@ type Alert = {
 type AIInsight = { id: string; title: string; description: string; suggestedAction: string };
 type AppUser = { name: string; role: UserRole };
 
-const MOCK_USER: AppUser = { name: "User", role: "admin" };
+const MOCK_USER: AppUser = { name: "User", role: "vehicle_owner" };
 
 const MOCK_VEHICLES: Vehicle[] = [
   { id: "1", regNumber: "KXX 000X", driverName: "Driver One", status: "active", passengers: 0, maxCapacity: 1 },

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Animated } from "react-native";
 
-// Placeholder type (replace with your actual type later)
-export type UserRole = "manager" | "owner" | "driver" | "admin";
+// Vehicle Owner app — only one role
+export type UserRole = "vehicle_owner";
 
 // Role Badge
 interface RoleBadgeProps {
@@ -12,30 +12,15 @@ interface RoleBadgeProps {
 
 export function RoleBadge({ role, size = "md" }: RoleBadgeProps) {
   const config = {
-    manager: {
-      label: "SACCO Manager",
-      color: "#3B82F6",
-      bg: "#3B82F622",
-    },
-    owner: {
+    vehicle_owner: {
       label: "Vehicle Owner",
       color: "#10B981",
       bg: "#10B98122",
     },
-    driver: {
-      label: "Driver",
-      color: "#F59E0B",
-      bg: "#F59E0B22",
-    },
-    admin: {
-      label: "Administrator",
-      color: "#A855F7",
-      bg: "#A855F722",
-    },
   }[role] ?? {
-    label: "Unknown Role",
-    color: "#6B7280",
-    bg: "#6B728022",
+    label: "Vehicle Owner",
+    color: "#10B981",
+    bg: "#10B98122",
   };
 
   const fontSize = size === "sm" ? 9 : 11;

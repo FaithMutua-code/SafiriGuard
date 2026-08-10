@@ -13,7 +13,8 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $fillable = ['name', 'email', 'phone', 'password', 'role', 'sacco_id'];
+    // Roles: 'admin' | 'vehicle_owner' | 'sacco_manager' | 'driver'
+    protected $fillable = ['name', 'email', 'phone', 'password', 'role', 'is_active'];
 
     protected $hidden = ['password', 'remember_token'];
 
@@ -21,14 +22,12 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
+            'is_active'         => 'boolean',
         ];
     }
 
-    public function sacco()
-    {
-        return $this->belongsTo(Sacco::class);
-    }
+
 
     public function vehicleOwner()
     {
@@ -39,4 +38,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(Driver::class);
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
 }
+

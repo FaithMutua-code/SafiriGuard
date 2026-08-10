@@ -6,16 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Vehicle extends Model
 {
-    protected $fillable = ['vehicle_owner_id', 'sacco_id', 'driver_id', 'number_plate', 'make', 'model', 'year', 'esp32_device_id', 'mpu6050_device_id'];
+    protected $fillable = ['vehicle_owner_id', 'driver_id', 'number_plate', 'make', 'model', 'year', 'esp32_device_id', 'mpu6050_device_id'];
 
     public function owner()
     {
         return $this->belongsTo(VehicleOwner::class, 'vehicle_owner_id');
     }
-    public function sacco()
-    {
-        return $this->belongsTo(Sacco::class);
-    }
+
     public function driver()
     {
         return $this->belongsTo(Driver::class);
@@ -23,5 +20,17 @@ class Vehicle extends Model
     public function trips()
     {
         return $this->hasMany(Trip::class);
+    }
+    public function iotDevice()
+    {
+        return $this->hasOne(IotDevice::class);
+    }
+    public function behaviorRecords()
+    {
+        return $this->hasMany(DriverBehaviorRecord::class);
+    }
+    public function gpsLogs()
+    {
+        return $this->hasMany(GpsLog::class);
     }
 }

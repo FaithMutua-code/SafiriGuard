@@ -13,7 +13,6 @@ return new class extends Migration {
         Schema::create('vehicle_owners', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->unique()->constrained()->cascadeOnDelete();
-            $table->foreignId('sacco_id')->constrained()->cascadeOnDelete();
             $table->string('id_number')->unique();
             $table->string('next_of_kin')->nullable();
             $table->timestamps();

@@ -28,6 +28,7 @@ export default function WelcomeScreen() {
         Animated.timing(anim, { toValue: 1, duration: 400, useNativeDriver: true })
       )
     ).start();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
