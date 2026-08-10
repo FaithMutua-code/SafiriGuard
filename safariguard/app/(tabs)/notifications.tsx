@@ -54,9 +54,6 @@ export default function AlertsScreen() {
     <ScreenContainer containerClassName="bg-background">
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <IconSymbol name="arrow.left" size={20} color="#1E293B" />
-        </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>Alerts Center</Text>
           <Text style={styles.subtitle}>{MOCK_ALERTS.filter(a => !a.resolved).length} active alerts</Text>
@@ -126,7 +123,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingTop: 8,
+    paddingTop: 16,
     paddingBottom: 12,
     gap: 12,
   },

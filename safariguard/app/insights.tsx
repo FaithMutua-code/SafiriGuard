@@ -1,236 +1,158 @@
-import React, { useEffect, useRef } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  Animated,
-} from "react-native";
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { router } from "expo-router";
-import { ScreenContainer } from "@/components/screen-container";
-import { GlassCard } from "@/components/ui/glass-card";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-
-// ---- Placeholder data (replace with real API / store data) ----
-export type AIInsight = {
-  id: string;
-  type: 'peak_hours' | 'safety_trend' | 'driver_performance' | 'occupancy_pattern' | 'maintenance_alert';
-  title: string;
-  description: string;
-  impact: 'high' | 'medium' | 'low';
-  timestamp: string;
-  actionable: boolean;
-  suggestedAction?: string;
-  vehicleIds?: string[];
-  driverIds?: string[];
-};
-
-const MOCK_AI_INSIGHTS: AIInsight[] = [];
-// -----------------------------------------------------------------
-
-const INSIGHT_ICONS = {
-  peak_hours: 'clock.fill',
-  safety_trend: 'shield.fill',
-  driver_performance: 'star.fill',
-  occupancy_pattern: 'person.2.fill',
-  maintenance_alert: 'gear',
-} as const;
-
-const INSIGHT_COLORS = {
-  peak_hours: '#6152FF',
-  safety_trend: '#EF4444',
-  driver_performance: '#10B981',
-  occupancy_pattern: '#FF9500',
-  maintenance_alert: '#6152FF',
-};
-
-const IMPACT_COLORS = {
-  high: '#EF4444',
-  medium: '#F59E0B',
-  low: '#10B981',
-};
-
-function InsightCard({ insight, index }: { insight: AIInsight; index: number }) {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(20)).current;
-  const color = INSIGHT_COLORS[insight.type];
-  const impactColor = IMPACT_COLORS[insight.impact];
-  const iconName = INSIGHT_ICONS[insight.type] as any;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, { toValue: 1, duration: 400, delay: index * 100, useNativeDriver: true }),
-      Animated.timing(slideAnim, { toValue: 0, duration: 400, delay: index * 100, useNativeDriver: true }),
-    ]).start();
-  }, []);
-
-  return (
-    <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
-      <GlassCard className="p-4 mb-4" glow glowColor={color}>
-        {/* Header */}
-        <View style={styles.insightHeader}>
-          <View style={[styles.insightIconContainer, { backgroundColor: color + '22' }]}>
-            <IconSymbol name={iconName} size={20} color={color} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <View style={styles.titleRow}>
-              <Text style={styles.insightTitle} numberOfLines={1}>{insight.title}</Text>
-            </View>
-            <View style={styles.metaRow}>
-              <View style={[styles.impactBadge, { backgroundColor: impactColor + '22' }]}>
-                <Text style={[styles.impactText, { color: impactColor }]}>
-                  {insight.impact.toUpperCase()} IMPACT
-                </Text>
-              </View>
-              <Text style={styles.timestamp}>{insight.timestamp}</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Description */}
-        <Text style={styles.description}>{insight.description}</Text>
-
-        {/* Action */}
-        {insight.actionable && (
-          <View style={[styles.actionContainer, { borderLeftColor: color }]}>
-            <Text style={[styles.actionLabel, { color }]}>Recommended Action</Text>
-            <Text style={styles.actionText}>{insight.suggestedAction}</Text>
-          </View>
-        )}
-
-        {/* Affected entities */}
-        {(insight.vehicleIds || insight.driverIds) && (
-          <View style={styles.affectedRow}>
-            {insight.vehicleIds && (
-              <View style={styles.affectedChip}>
-                <IconSymbol name="car.fill" size={10} color="#8E8E93" />
-                <Text style={styles.affectedText}>{insight.vehicleIds.length} vehicle(s)</Text>
-              </View>
-            )}
-            {insight.driverIds && (
-              <View style={styles.affectedChip}>
-                <IconSymbol name="person.fill" size={10} color="#8E8E93" />
-                <Text style={styles.affectedText}>{insight.driverIds.length} driver(s)</Text>
-              </View>
-            )}
-          </View>
-        )}
-      </GlassCard>
-    </Animated.View>
-  );
-}
+import { useTheme, ThemeColors } from "@/context/ThemeContext";
 
 export default function InsightsScreen() {
-  const headerAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.timing(headerAnim, { toValue: 1, duration: 500, useNativeDriver: true }).start();
-  }, []);
+  const { theme } = useTheme();
+  const s = makeStyles(theme);
 
   return (
-    <ScreenContainer containerClassName="bg-background">
+    <SafeAreaView style={s.safeArea} edges={['top', 'left', 'right']}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <IconSymbol name="arrow.left" size={20} color="#1E293B" />
+      <View style={s.header}>
+        <TouchableOpacity onPress={() => router.back()} style={s.backBtn}>
+          <IconSymbol name="arrow.left" size={20} color={theme.textPrimary} />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
-          <Text style={styles.title}>AI Insights</Text>
-          <Text style={styles.subtitle}>Powered by SafariGuard Intelligence</Text>
-        </View>
-        <View style={styles.aiBadge}>
-          <IconSymbol name="sparkles" size={14} color="#FF9500" />
-          <Text style={styles.aiBadgeText}>Live</Text>
+          <Text style={s.headerTitle}>Revenue & Insights</Text>
         </View>
       </View>
 
-      {/* Summary Banner */}
-      <Animated.View style={[styles.bannerContainer, { opacity: headerAnim }]}>
-        <GlassCard className="mx-4 p-4 mb-4" glow glowColor="#FF9500">
-          <View style={styles.bannerContent}>
-            <View style={styles.bannerIcon}>
-              <IconSymbol name="brain" size={24} color="#FF9500" />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.bannerTitle}>
-                {MOCK_AI_INSIGHTS.length} insights generated
-              </Text>
-              <Text style={styles.bannerSubtitle}>
-                {MOCK_AI_INSIGHTS.filter(i => i.impact === 'high').length} high-impact recommendations require attention
-              </Text>
-            </View>
-          </View>
-        </GlassCard>
-      </Animated.View>
+      <ScrollView contentContainerStyle={s.content}>
+        {/* Warning Badge for Estimated Revenue */}
+        <View style={s.warningCard}>
+          <IconSymbol name="info.circle.fill" size={16} color={theme.amber} />
+          <Text style={s.warningText}>
+            All revenue metrics are **estimated** based on passenger counts and route averages. This data is not intended for official accounting.
+          </Text>
+        </View>
 
-      {/* Insights List */}
-      <FlatList
-        data={MOCK_AI_INSIGHTS}
-        keyExtractor={item => item.id}
-        renderItem={({ item, index }) => <InsightCard insight={item} index={index} />}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-      />
-    </ScreenContainer>
+        {/* Daily Summary */}
+        <View style={s.revenueCard}>
+          <Text style={s.revLabel}>Estimated Today's Revenue</Text>
+          <Text style={s.revValue}>KES 14,250</Text>
+          <Text style={s.revSub}>Across 2 active vehicles</Text>
+        </View>
+
+        {/* Operational Stats */}
+        <View style={s.statsCard}>
+          <Text style={s.cardTitle}>Operational Performance</Text>
+          <View style={s.infoRow}>
+            <Text style={s.infoLabel}>Total Passengers Today</Text>
+            <Text style={s.infoValue}>95 Pax</Text>
+          </View>
+          <View style={s.divider} />
+          <View style={s.infoRow}>
+            <Text style={s.infoLabel}>Trips Completed</Text>
+            <Text style={s.infoValue}>6 Trips</Text>
+          </View>
+          <View style={s.divider} />
+          <View style={s.infoRow}>
+            <Text style={s.infoLabel}>Distance Travelled</Text>
+            <Text style={s.infoValue}>420 Km</Text>
+          </View>
+          <View style={s.divider} />
+          <View style={s.infoRow}>
+            <Text style={s.infoLabel}>Est. Revenue per Trip</Text>
+            <Text style={s.infoValue}>KES 2,375</Text>
+          </View>
+        </View>
+
+        {/* AI Insights Section */}
+        <View style={s.aiSection}>
+          <View style={s.aiTitleRow}>
+            <IconSymbol name="sparkles" size={18} color={theme.amber} />
+            <Text style={s.aiTitle}>AI Performance Insights</Text>
+          </View>
+
+          <View style={s.insightBubble}>
+            <Text style={s.insightTitle}>💡 Route Efficiency Opportunity</Text>
+            <Text style={s.insightDesc}>
+              Vehicle KXX 000X completed Trip 2 with a full passenger load 15 minutes faster than average. Consider prioritizing this corridor during peak hours (16:00 - 18:00).
+            </Text>
+          </View>
+
+          <View style={s.insightBubble}>
+            <Text style={s.insightTitle}>⚠️ Safety Alert Pattern</Text>
+            <Text style={s.insightDesc}>
+              Unsafe driving alerts (harsh braking) have spiked on the Ngong Road route today. A driver coaching review is recommended for vehicle KXX 001X.
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (theme: ThemeColors) => StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: theme.bg },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 12,
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 16,
     gap: 12,
   },
-  backButton: {
+  backBtn: {
     width: 40, height: 40, borderRadius: 12,
-    backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E2E8F0',
+    backgroundColor: theme.card, borderWidth: 1, borderColor: theme.cardBorder,
     alignItems: 'center', justifyContent: 'center',
   },
-  title: { fontSize: 22, fontWeight: '700', color: '#1E293B' },
-  subtitle: { fontSize: 12, color: '#8E8E93', marginTop: 2 },
-  aiBadge: {
-    flexDirection: 'row', alignItems: 'center', gap: 4,
-    backgroundColor: '#FF950022', borderRadius: 12, paddingHorizontal: 10, paddingVertical: 5,
-    borderWidth: 1, borderColor: '#FF950044',
+  headerTitle: { fontSize: 20, fontWeight: '700', color: theme.textPrimary },
+  
+  content: { padding: 20, paddingBottom: 100, gap: 20 },
+  
+  warningCard: {
+    flexDirection: 'row',
+    backgroundColor: theme.amberSoft,
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1, borderColor: theme.amber + '33',
+    alignItems: 'flex-start',
+    gap: 12,
   },
-  aiBadgeText: { fontSize: 11, color: '#FF9500', fontWeight: '600' },
-  bannerContainer: {},
-  bannerContent: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  bannerIcon: {
-    width: 48, height: 48, borderRadius: 14,
-    backgroundColor: '#FF950022', alignItems: 'center', justifyContent: 'center',
-    borderWidth: 1, borderColor: '#FF950044',
+  warningText: { fontSize: 12, color: theme.textSecondary, flex: 1, lineHeight: 18 },
+  
+  revenueCard: {
+    backgroundColor: theme.card,
+    borderRadius: 20,
+    padding: 24,
+    alignItems: 'center',
+    borderWidth: 1, borderColor: theme.cardBorder,
   },
-  bannerTitle: { fontSize: 15, fontWeight: '700', color: '#1E293B', marginBottom: 4 },
-  bannerSubtitle: { fontSize: 12, color: '#8E8E93', lineHeight: 17 },
-  listContent: { paddingHorizontal: 16, paddingBottom: 100 },
-  insightHeader: { flexDirection: 'row', gap: 12, marginBottom: 12 },
-  insightIconContainer: {
-    width: 44, height: 44, borderRadius: 12,
-    alignItems: 'center', justifyContent: 'center',
+  revLabel: { fontSize: 12, color: theme.textSecondary, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 },
+  revValue: { fontSize: 36, fontWeight: '800', color: theme.emerald, marginBottom: 6 },
+  revSub: { fontSize: 12, color: theme.textSecondary },
+  
+  statsCard: {
+    backgroundColor: theme.card,
+    borderRadius: 20,
+    padding: 20,
+    borderWidth: 1, borderColor: theme.cardBorder,
   },
-  titleRow: { marginBottom: 6 },
-  insightTitle: { fontSize: 15, fontWeight: '700', color: '#1E293B' },
-  metaRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  impactBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6 },
-  impactText: { fontSize: 9, fontWeight: '700', letterSpacing: 0.5 },
-  timestamp: { fontSize: 11, color: '#8E8E93' },
-  description: { fontSize: 13, color: '#8E8E93', lineHeight: 19, marginBottom: 12 },
-  actionContainer: {
-    backgroundColor: '#F8F9FA', borderRadius: 10, padding: 12,
-    borderLeftWidth: 3, marginBottom: 10, borderWidth: 1, borderColor: '#E2E8F0',
+  cardTitle: { fontSize: 15, fontWeight: '800', color: theme.textPrimary, marginBottom: 16 },
+  infoRow: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingVertical: 10,
   },
-  actionLabel: { fontSize: 10, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 },
-  actionText: { fontSize: 12, color: '#8E8E93', lineHeight: 17 },
-  affectedRow: { flexDirection: 'row', gap: 8, marginTop: 4 },
-  affectedChip: {
-    flexDirection: 'row', alignItems: 'center', gap: 4,
-    backgroundColor: '#F8F9FA', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4,
-    borderWidth: 1, borderColor: '#E2E8F0',
+  infoLabel: { fontSize: 13, color: theme.textSecondary },
+  infoValue: { fontSize: 14, fontWeight: '700', color: theme.textPrimary },
+  divider: { height: 1, backgroundColor: theme.cardBorder },
+  
+  aiSection: { gap: 12, marginTop: 8 },
+  aiTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4 },
+  aiTitle: { fontSize: 16, fontWeight: '800', color: theme.textPrimary },
+  insightBubble: {
+    backgroundColor: theme.card,
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1, borderColor: theme.cardBorder,
+    gap: 6,
   },
-  affectedText: { fontSize: 11, color: '#8E8E93' },
+  insightTitle: { fontSize: 13, fontWeight: '700', color: theme.textPrimary },
+  insightDesc: { fontSize: 12, color: theme.textSecondary, lineHeight: 18 },
 });

@@ -7,7 +7,7 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
 import { GlassCard } from "@/components/ui/glass-card";
 import { IconSymbol } from "@/components/ui/icon-symbol";
@@ -59,7 +59,9 @@ const MOCK_VEHICLES: Vehicle[] = [
 // -----------------------------------------------------------------
 
 export default function GPSScreen() {
-  const [selectedVehicle, setSelectedVehicle] = useState(MOCK_VEHICLES[0].id);
+  const { vehicleId } = useLocalSearchParams();
+  const initialSelected = MOCK_VEHICLES.find(v => v.id === vehicleId) ? (vehicleId as string) : MOCK_VEHICLES[0].id;
+  const [selectedVehicle, setSelectedVehicle] = useState(initialSelected);
   const selected = MOCK_VEHICLES.find(v => v.id === selectedVehicle) || MOCK_VEHICLES[0];
 
   return (

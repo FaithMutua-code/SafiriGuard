@@ -15,6 +15,7 @@ import { ScreenContainer } from "@/components/screen-container";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { RoleBadge } from "@/components/ui/badges";
 import { useTheme, ThemeColors } from "@/context/ThemeContext";
+import { useAppAuth } from "@/context/AuthContext";
 
 // ---- Placeholder data (replace with real API / auth / store data) ----
 type Vehicle = {
@@ -31,38 +32,7 @@ type Driver = {
   status: 'on_duty' | 'off_duty';
 };
 
-type AppUser = {
-  name: string;
-  email: string;
-  phone: string;
-  role: 'manager' | 'owner' | 'driver';
-};
 
-const MOCK_USER: AppUser = {
-  name: "User",
-  email: "",
-  phone: "+254 700 000 000",
-  role: "manager",
-};
-
-const MOCK_VEHICLES: Vehicle[] = [
-  { id: "1", regNumber: "KXX 000X", route: "Route A", status: "active", totalTripsToday: 0 },
-  { id: "2", regNumber: "KXX 001X", route: "Route B", status: "idle", totalTripsToday: 0 },
-];
-
-const MOCK_DRIVERS: Driver[] = [
-  { id: "1", name: "Driver One", status: "on_duty" },
-  { id: "2", name: "Driver Two", status: "off_duty" },
-];
-
-function useAppAuth() {
-  return {
-    user: MOCK_USER,
-    logout: () => {
-      // TODO: wire up real logout logic
-    },
-  };
-}
 // -----------------------------------------------------------------
 
 interface SettingRowProps {
@@ -134,11 +104,17 @@ export default function ProfileScreen() {
     );
   };
 
-  const assignedVehicles = user?.role === 'manager'
-    ? MOCK_VEHICLES
-    : user?.role === 'owner'
-    ? MOCK_VEHICLES.slice(0, 3)
-    : MOCK_VEHICLES.slice(0, 1);
+  const MOCK_VEHICLES: Vehicle[] = [
+    { id: "1", regNumber: "KXX 000X", route: "Route A", status: "active", totalTripsToday: 0 },
+    { id: "2", regNumber: "KXX 001X", route: "Route B", status: "idle", totalTripsToday: 0 },
+  ];
+
+  const MOCK_DRIVERS: Driver[] = [
+    { id: "1", name: "Driver One", status: "on_duty" },
+    { id: "2", name: "Driver Two", status: "off_duty" },
+  ];
+
+  const assignedVehicles = MOCK_VEHICLES;
 
   return (
     <SafeAreaView style={s.safeArea} edges={['top', 'left', 'right']}>

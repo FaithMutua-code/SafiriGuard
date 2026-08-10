@@ -65,10 +65,10 @@ export default function DashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
 
   const QUICK_ACTIONS = [
-    { id: 'fleet', label: 'Fleet', icon: 'car.2.fill', color: theme.primary, soft: theme.mode === 'dark' ? theme.primary + '22' : '#EDEAFB', route: '/(tabs)/fleet' },
-    { id: 'gps', label: 'GPS Track', icon: 'map.fill', color: theme.emerald, soft: theme.emeraldSoft, route: '/gps' },
+    { id: 'fleet', label: 'My Vehicles', icon: 'car.2.fill', color: theme.primary, soft: theme.mode === 'dark' ? theme.primary + '22' : '#EDEAFB', route: '/(tabs)/vehicles' },
+    { id: 'trips', label: 'Trips', icon: 'map.fill', color: theme.emerald, soft: theme.emeraldSoft, route: '/(tabs)/trips' },
     { id: 'insights', label: 'AI Insights', icon: 'sparkles', color: theme.amber, soft: theme.amberSoft, route: '/insights' },
-    { id: 'alerts', label: 'Alerts', icon: 'bell.badge.fill', color: theme.danger, soft: theme.dangerSoft, route: '/alerts' },
+    { id: 'alerts', label: 'Alerts', icon: 'bell.badge.fill', color: theme.danger, soft: theme.dangerSoft, route: '/(tabs)/notifications' },
   ];
 
   const headerAnim = useRef(new Animated.Value(0)).current;
@@ -109,7 +109,7 @@ export default function DashboardScreen() {
                 <Text style={s.userName}>{user?.name ?? 'User'}</Text>
                 {user && <RoleBadge role={user.role} size="sm" />}
               </View>
-              <TouchableOpacity style={s.notifButton} onPress={() => router.push('/alerts' as any)}>
+              <TouchableOpacity style={s.notifButton} onPress={() => router.push('/(tabs)/notifications' as any)}>
                 <IconSymbol name="bell.fill" size={19} color="#FFFFFF" />
                 {unresolvedAlerts.length > 0 && (
                   <View style={s.notifBadge}>
@@ -225,7 +225,7 @@ export default function DashboardScreen() {
             <View style={s.section}>
               <View style={s.sectionHeader}>
                 <Text style={s.sectionTitle}>Live Fleet</Text>
-                <TouchableOpacity onPress={() => router.push('/(tabs)/fleet' as any)}>
+                <TouchableOpacity onPress={() => router.push('/(tabs)/vehicles' as any)}>
                   <Text style={s.seeAll}>See All</Text>
                 </TouchableOpacity>
               </View>
@@ -258,7 +258,7 @@ export default function DashboardScreen() {
             <View style={s.section}>
               <View style={s.sectionHeader}>
                 <Text style={s.sectionTitle}>Recent Alerts</Text>
-                <TouchableOpacity onPress={() => router.push('/alerts' as any)}>
+                <TouchableOpacity onPress={() => router.push('/(tabs)/notifications' as any)}>
                   <Text style={s.seeAll}>See All</Text>
                 </TouchableOpacity>
               </View>

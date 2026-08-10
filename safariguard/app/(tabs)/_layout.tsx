@@ -36,22 +36,29 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Dashboard",
+          title: "Home",
           tabBarIcon: ({ color }) => <IconSymbol size={24} name="house.fill" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="fleet"
+        name="vehicles"
         options={{
-          title: "Fleet",
+          title: "My Vehicles",
           tabBarIcon: ({ color }) => <IconSymbol size={24} name="car.2.fill" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="analytics"
+        name="trips"
         options={{
-          title: "Analytics",
-          tabBarIcon: ({ color }) => <IconSymbol size={24} name="chart.bar.fill" color={color} />,
+          title: "Trips",
+          tabBarIcon: ({ color }) => <IconSymbol size={24} name="map.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="notifications"
+        options={{
+          title: "Alerts",
+          tabBarIcon: ({ color }) => <IconSymbol size={24} name="bell.fill" color={color} />,
         }}
       />
       <Tabs.Screen
