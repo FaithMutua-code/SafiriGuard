@@ -77,6 +77,7 @@ export default function RegisterScreen() {
   return (
     <KeyboardAvoidingView
       style={styles.container}
+      // FIX: give Android a behavior so it doesn't fight the system resize
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <StatusBar style="dark" />
@@ -226,7 +227,7 @@ function InputField({
         <IconSymbol name={icon} size={16} color="#6152FF" />
       </View>
       <TextInput
-        style={[styles.input, { flex: 1 }]}
+        style={styles.input}
         placeholder={placeholder}
         placeholderTextColor="#94A3B8"
         value={value}
@@ -344,17 +345,14 @@ const styles = StyleSheet.create({
     borderWidth: 1.3, borderColor: "#EAEDF5",
     paddingHorizontal: 14, height: 54,
   },
+  // FIX: colors only — no shadow/elevation changes on focus
   inputWrapperFocused: {
-    borderColor: "#6152FF55",
+    borderColor: "#6152FF88",
     backgroundColor: "#FFFFFF",
-    shadowColor: "#6152FF",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 10,
-    elevation: 3,
   },
   inputIcon: { marginRight: 10 },
-  input: { color: "#1E293B", fontSize: 15, height: "100%" },
+  // FIX: flex: 1 instead of height: "100%", and no extra vertical padding
+  input: { flex: 1, color: "#1E293B", fontSize: 15, paddingVertical: 0 },
   eyeButton: { padding: 4 },
   errorContainer: {
     flexDirection: "row", alignItems: "center", gap: 8,
