@@ -7,16 +7,17 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { LinearGradient } from "expo-linear-gradient";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { useAppAuth } from "@/context/AuthContext";
 import { AuthInput } from "@/components/auth/AuthInput";
+import { AuthHeader, CARD_OVERLAP } from "@/components/auth/AuthHeader";
+import { GradientButton } from "@/components/auth/GradientButton";
+import { COLORS } from "@/components/auth/tokens";
 
 export default function RegisterScreen() {
   const { registerOwner } = useAppAuth();
@@ -49,9 +50,9 @@ export default function RegisterScreen() {
     setLoading(true);
     try {
       await registerOwner({
-        name,
-        email,
-        phone: phone || undefined,
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim() || undefined,
         password,
       });
       router.replace("/onboarding/add-vehicle");
@@ -79,7 +80,7 @@ export default function RegisterScreen() {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -87,44 +88,17 @@ export default function RegisterScreen() {
         showsVerticalScrollIndicator={false}
         bounces={false}
       >
-        {/* Hero */}
-        <LinearGradient
-          colors={["#17104F", "#3426C4", "#6152FF"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.hero}
-        >
-          <View pointerEvents="none" style={styles.orbLarge} />
-          <View pointerEvents="none" style={styles.orbSmall} />
+        <AuthHeader onBack={() => router.back()} />
 
-          <TouchableOpacity
-            onPress={() => router.back()}
-            style={styles.backButton}
-            hitSlop={8}
-          >
-            <IconSymbol name="arrow.left" size={20} color="#FFFFFF" />
-          </TouchableOpacity>
-
-          <View style={styles.logoBox}>
-            <Text style={styles.logoEmoji}>🛡</Text>
-          </View>
-          <Text style={styles.heroTitle}>Create Account</Text>
-          <Text style={styles.heroSubtitle}>
-            Register as a Vehicle Owner on SafariGuard
-          </Text>
-        </LinearGradient>
-
-        {/* Card */}
         <View style={styles.card}>
-          <View style={styles.sectionHeader}>
-            <View style={styles.sectionDot} />
-            <Text style={styles.sectionText}>Personal Details</Text>
-          </View>
+          <Text style={styles.title}>Create account</Text>
+          <Text style={styles.subtitle}>
+            Register as a vehicle owner. It takes a minute.
+          </Text>
 
-          <View style={styles.group}>
+          <View style={styles.form}>
             <AuthInput
               label="Full name *"
-              icon="person.fill"
               placeholder="Jane Wanjiru"
               value={name}
               onChangeText={setName}
@@ -133,12 +107,11 @@ export default function RegisterScreen() {
               textContentType="name"
               returnKeyType="next"
               onSubmitEditing={() => emailRef.current?.focus()}
-              blurOnSubmit={false}
+              submitBehavior="submit"
             />
             <AuthInput
               ref={emailRef}
               label="Email address *"
-              icon="envelope.fill"
               placeholder="you@example.com"
               value={email}
               onChangeText={setEmail}
@@ -148,34 +121,21 @@ export default function RegisterScreen() {
               textContentType="emailAddress"
               returnKeyType="next"
               onSubmitEditing={() => phoneRef.current?.focus()}
-              blurOnSubmit={false}
+              submitBehavior="submit"
             />
             <AuthInput
               ref={phoneRef}
               label="Phone number"
-              icon="phone.fill"
               placeholder="07XX XXX XXX"
               value={phone}
               onChangeText={setPhone}
               keyboardType="phone-pad"
               autoComplete="tel"
               textContentType="telephoneNumber"
-              returnKeyType="next"
-              onSubmitEditing={() => passwordRef.current?.focus()}
-              blurOnSubmit={false}
             />
-          </View>
-
-          <View style={[styles.sectionHeader, { marginTop: 28 }]}>
-            <View style={styles.sectionDot} />
-            <Text style={styles.sectionText}>Security</Text>
-          </View>
-
-          <View style={styles.group}>
             <AuthInput
               ref={passwordRef}
               label="Password *"
-              icon="lock.fill"
               placeholder="Create a password"
               value={password}
               onChangeText={setPassword}
@@ -185,12 +145,11 @@ export default function RegisterScreen() {
               textContentType="newPassword"
               returnKeyType="next"
               onSubmitEditing={() => confirmRef.current?.focus()}
-              blurOnSubmit={false}
+              submitBehavior="submit"
             />
             <AuthInput
               ref={confirmRef}
               label="Confirm password *"
-              icon="lock.fill"
               placeholder="Re-enter your password"
               value={confirmPassword}
               onChangeText={setConfirmPassword}
@@ -201,37 +160,20 @@ export default function RegisterScreen() {
               returnKeyType="done"
               onSubmitEditing={handleRegister}
             />
+
+            {error ? (
+              <View style={styles.errorContainer}>
+                <IconSymbol name="xmark.circle.fill" size={15} color={COLORS.error} />
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            ) : null}
+
+            <GradientButton
+              title="Create account"
+              onPress={handleRegister}
+              loading={loading}
+            />
           </View>
-
-          {error ? (
-            <View style={styles.errorContainer}>
-              <IconSymbol name="xmark.circle.fill" size={15} color="#E5484D" />
-              <Text style={styles.errorText}>{error}</Text>
-            </View>
-          ) : null}
-
-          <TouchableOpacity
-            onPress={handleRegister}
-            activeOpacity={0.9}
-            disabled={loading}
-            style={[styles.buttonShadow, loading && styles.buttonDisabled]}
-          >
-            <LinearGradient
-              colors={["#6B5CFF", "#4A3BF0"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.button}
-            >
-              {loading ? (
-                <ActivityIndicator color="#fff" size="small" />
-              ) : (
-                <>
-                  <Text style={styles.buttonText}>Create Account</Text>
-                  <IconSymbol name="chevron.right" size={18} color="#fff" />
-                </>
-              )}
-            </LinearGradient>
-          </TouchableOpacity>
 
           <View style={styles.footerRow}>
             <Text style={styles.footerText}>Already have an account? </Text>
@@ -249,101 +191,31 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FFFFFF" },
   scrollContent: { flexGrow: 1 },
 
-  hero: {
-    alignItems: "center",
-    paddingTop: 60,
-    paddingBottom: 68,
-    paddingHorizontal: 24,
-    overflow: "hidden",
-  },
-  orbLarge: {
-    position: "absolute",
-    top: -70,
-    right: -60,
-    width: 240,
-    height: 240,
-    borderRadius: 120,
-    backgroundColor: "#FFFFFF",
-    opacity: 0.07,
-  },
-  orbSmall: {
-    position: "absolute",
-    bottom: -40,
-    left: -40,
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    backgroundColor: "#FFFFFF",
-    opacity: 0.06,
-  },
-  backButton: {
-    alignSelf: "flex-start",
-    width: 42,
-    height: 42,
-    borderRadius: 14,
-    backgroundColor: "rgba(255,255,255,0.14)",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.25)",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 18,
-  },
-  logoBox: {
-    width: 68,
-    height: 68,
-    borderRadius: 22,
-    backgroundColor: "rgba(255,255,255,0.14)",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.28)",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 16,
-  },
-  logoEmoji: { fontSize: 30 },
-  heroTitle: {
-    fontSize: 27,
-    fontWeight: "800",
-    color: "#FFFFFF",
-    letterSpacing: -0.2,
-  },
-  heroSubtitle: {
-    fontSize: 13.5,
-    color: "rgba(255,255,255,0.72)",
-    marginTop: 6,
-    textAlign: "center",
-    lineHeight: 20,
-  },
-
   card: {
     flex: 1,
-    marginTop: -32,
+    zIndex: 1,
+    marginTop: -CARD_OVERLAP,
     backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 34,
-    borderTopRightRadius: 34,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
     paddingHorizontal: 24,
     paddingTop: 30,
     paddingBottom: 40,
   },
-  sectionHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: 16,
+  title: {
+    fontSize: 30,
+    fontWeight: "800",
+    color: COLORS.ink,
+    letterSpacing: -0.8,
   },
-  sectionDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: "#6152FF",
+  subtitle: {
+    fontSize: 14.5,
+    color: COLORS.muted,
+    marginTop: 6,
+    marginBottom: 26,
   },
-  sectionText: {
-    fontSize: 11.5,
-    fontWeight: "700",
-    color: "#6152FF",
-    textTransform: "uppercase",
-    letterSpacing: 1.1,
-  },
-  group: { gap: 16 },
+
+  form: { gap: 18, marginBottom: 26 },
 
   errorContainer: {
     flexDirection: "row",
@@ -354,41 +226,14 @@ const styles = StyleSheet.create({
     padding: 13,
     borderWidth: 1,
     borderColor: "#FBD5D5",
-    marginTop: 20,
   },
   errorText: { color: "#C93B3B", fontSize: 13, flex: 1, fontWeight: "500" },
-
-  buttonShadow: {
-    borderRadius: 18,
-    marginTop: 28,
-    shadowColor: "#4A3BF0",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
-    shadowRadius: 18,
-    elevation: 8,
-  },
-  button: {
-    height: 58,
-    borderRadius: 18,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-  },
-  buttonDisabled: { opacity: 0.7 },
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 16.5,
-    fontWeight: "700",
-    letterSpacing: 0.3,
-  },
 
   footerRow: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 24,
   },
-  footerText: { color: "#7A839C", fontSize: 14 },
-  footerLink: { color: "#6152FF", fontSize: 14, fontWeight: "700" },
+  footerText: { color: COLORS.muted, fontSize: 14 },
+  footerLink: { color: COLORS.primary, fontSize: 14, fontWeight: "800" },
 });
