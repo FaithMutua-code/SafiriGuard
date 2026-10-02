@@ -1,171 +1,273 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   View,
   Text,
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  RefreshControl,
 } from "react-native";
 import { router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import * as Haptics from "expo-haptics";
+import { registerPushNotificationsAsync } from "@/lib/pushNotifications";
 import { ScreenContainer } from "@/components/screen-container";
 import { AlertCard } from "@/components/ui/alert-card";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-
-// ---- Placeholder data (replace with real API / store data) ----
-export type Alert = {
-  id: string;
-  vehicleReg: string;
-  driverName: string;
-  type: 'harsh_braking' | 'speeding' | 'passenger_anomaly' | 'device_offline' | 'emergency' | 'geofence' | 'maintenance';
-  severity: 'critical' | 'warning' | 'info';
-  description: string;
-  location: string;
-  suggestedAction: string;
-  timestamp: string;
-  resolved: boolean;
-};
-
-const MOCK_ALERTS: Alert[] = [];
-
-// -----------------------------------------------------------------
+import { useTheme, ThemeColors } from "@/context/ThemeContext";
+import { useOwnerAlerts, useResolveAlert } from "@/hooks/useOwnerData";
+import { Skeleton, ErrorState, EmptyState, UpdatedBadge } from "@/components/ui/state-views";
 
 const FILTERS = ['All', 'Critical', 'Warning', 'Info', 'Resolved'] as const;
 type FilterType = typeof FILTERS[number];
 
 export default function AlertsScreen() {
+  const { theme } = useTheme();
+  const s = makeStyles(theme);
   const [activeFilter, setActiveFilter] = useState<FilterType>('All');
+  const [resolvingId, setResolvingId] = useState<number | null>(null);
 
-  const filtered = useMemo(() => {
-    return MOCK_ALERTS.filter(a => {
-      if (activeFilter === 'All') return !a.resolved;
-      if (activeFilter === 'Resolved') return a.resolved;
-      return a.severity === activeFilter.toLowerCase() && !a.resolved;
-    });
-  }, [activeFilter]);
+  const isResolvedView = activeFilter === 'Resolved';
+  const {
+    data: alertsData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    isFetching,
+    dataUpdatedAt,
+  } = useOwnerAlerts(isResolvedView ? 'resolved' : 'active');
 
-  const counts = {
-    critical: MOCK_ALERTS.filter(a => a.severity === 'critical' && !a.resolved).length,
-    warning: MOCK_ALERTS.filter(a => a.severity === 'warning' && !a.resolved).length,
-    info: MOCK_ALERTS.filter(a => a.severity === 'info' && !a.resolved).length,
-    resolved: MOCK_ALERTS.filter(a => a.resolved).length,
+  const resolveMutation = useResolveAlert();
+
+  // Register push token with backend on mount
+  useEffect(() => {
+    registerPushNotificationsAsync();
+  }, []);
+
+  const alerts = useMemo(() => alertsData?.data ?? [], [alertsData]);
+
+  const handleFilterChange = (f: FilterType) => {
+    try {
+      Haptics.selectionAsync();
+    } catch {}
+    setActiveFilter(f);
   };
 
+  const onRefresh = async () => {
+    try {
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    } catch {}
+    refetch();
+  };
+
+  const handleResolve = async (id: number) => {
+    try {
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    } catch {}
+    setResolvingId(id);
+    try {
+      await resolveMutation.mutateAsync(id);
+    } catch {}
+    setResolvingId(null);
+  };
+
+  const filtered = useMemo(() => {
+    if (activeFilter === 'All' || activeFilter === 'Resolved') {
+      return alerts;
+    }
+    return alerts.filter(a => a.severity.toLowerCase() === activeFilter.toLowerCase());
+  }, [alerts, activeFilter]);
+
+  const counts = useMemo(() => {
+    return {
+      critical: alerts.filter(a => a.severity === 'critical').length,
+      warning: alerts.filter(a => a.severity === 'warning').length,
+      info: alerts.filter(a => a.severity === 'info').length,
+      total: alerts.length,
+    };
+  }, [alerts]);
+
   return (
-    <ScreenContainer containerClassName="bg-background">
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.title}>Alerts Center</Text>
-          <Text style={styles.subtitle}>{MOCK_ALERTS.filter(a => !a.resolved).length} active alerts</Text>
-        </View>
-      </View>
-
-      {/* Summary Row */}
-      <View style={styles.summaryRow}>
-        <View style={[styles.summaryCard, { borderColor: '#EF444433' }]}>
-          <Text style={[styles.summaryCount, { color: '#EF4444' }]}>{counts.critical}</Text>
-          <Text style={styles.summaryLabel}>Critical</Text>
-        </View>
-        <View style={[styles.summaryCard, { borderColor: '#F59E0B33' }]}>
-          <Text style={[styles.summaryCount, { color: '#F59E0B' }]}>{counts.warning}</Text>
-          <Text style={styles.summaryLabel}>Warning</Text>
-        </View>
-        <View style={[styles.summaryCard, { borderColor: '#6152FF33' }]}>
-          <Text style={[styles.summaryCount, { color: '#6152FF' }]}>{counts.info}</Text>
-          <Text style={styles.summaryLabel}>Info</Text>
-        </View>
-        <View style={[styles.summaryCard, { borderColor: '#10B98133' }]}>
-          <Text style={[styles.summaryCount, { color: '#10B981' }]}>{counts.resolved}</Text>
-          <Text style={styles.summaryLabel}>Resolved</Text>
-        </View>
-      </View>
-
-      {/* Filter Chips */}
-      <View style={styles.filtersRow}>
-        {FILTERS.map(f => (
-          <TouchableOpacity
-            key={f}
-            onPress={() => setActiveFilter(f)}
-            style={[styles.filterChip, activeFilter === f && styles.filterChipActive]}
-          >
-            <Text style={[styles.filterText, activeFilter === f && styles.filterTextActive]}>{f}</Text>
+    <SafeAreaView style={s.safeArea} edges={['top', 'left', 'right']}>
+      <ScreenContainer containerClassName="bg-background" style={{ backgroundColor: theme.bg }}>
+        {/* Header */}
+        <View style={s.header}>
+          <TouchableOpacity onPress={() => router.back()} style={s.backButton} activeOpacity={0.8}>
+            <IconSymbol name="arrow.left" size={18} color={theme.textPrimary} />
           </TouchableOpacity>
-        ))}
-      </View>
+          <View style={{ flex: 1 }}>
+            <Text style={s.title}>Alerts Center</Text>
+            <Text style={s.subtitle}>
+              {counts.total} {isResolvedView ? 'resolved alerts' : 'active alerts'}
+            </Text>
+          </View>
+          <UpdatedBadge
+            updatedAt={dataUpdatedAt ? new Date(dataUpdatedAt) : null}
+            isFetching={isFetching}
+          />
+        </View>
 
-      {/* Alerts List */}
-      <FlatList
-        data={filtered}
-        keyExtractor={item => item.id}
-        renderItem={({ item, index }) => (
-          <AlertCard
-            alert={item}
-            showTimeline
-            isLast={index === filtered.length - 1}
+        {/* Summary Row */}
+        <View style={s.summaryRow}>
+          <View style={[s.summaryCard, { borderColor: theme.danger + '33' }]}>
+            <Text style={[s.summaryCount, { color: theme.danger }]}>{counts.critical}</Text>
+            <Text style={s.summaryLabel}>Critical</Text>
+          </View>
+          <View style={[s.summaryCard, { borderColor: theme.amber + '33' }]}>
+            <Text style={[s.summaryCount, { color: theme.amber }]}>{counts.warning}</Text>
+            <Text style={s.summaryLabel}>Warning</Text>
+          </View>
+          <View style={[s.summaryCard, { borderColor: theme.electric + '33' }]}>
+            <Text style={[s.summaryCount, { color: theme.electric }]}>{counts.info}</Text>
+            <Text style={s.summaryLabel}>Info</Text>
+          </View>
+          <TouchableOpacity
+            style={[
+              s.summaryCard,
+              { borderColor: theme.emerald + '33' },
+              isResolvedView && { backgroundColor: theme.emeraldSoft },
+            ]}
+            onPress={() => handleFilterChange(isResolvedView ? 'All' : 'Resolved')}
+          >
+            <Text style={[s.summaryCount, { color: theme.emerald }]}>
+              {isResolvedView ? counts.total : '✓'}
+            </Text>
+            <Text style={s.summaryLabel}>{isResolvedView ? 'Viewing' : 'History'}</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Filter Chips */}
+        <View style={s.filtersRow}>
+          {FILTERS.map(f => {
+            const isSelected = activeFilter === f;
+            return (
+              <TouchableOpacity
+                key={f}
+                onPress={() => handleFilterChange(f)}
+                activeOpacity={0.8}
+                style={[s.filterChip, isSelected && s.filterChipActive]}
+              >
+                <Text style={[s.filterText, isSelected && s.filterTextActive]}>{f}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
+        {/* Alerts List */}
+        {isLoading ? (
+          <View style={{ padding: 16, gap: 12 }}>
+            <Skeleton height={90} borderRadius={18} />
+            <Skeleton height={90} borderRadius={18} />
+            <Skeleton height={90} borderRadius={18} />
+          </View>
+        ) : isError ? (
+          <ErrorState message={(error as any)?.message ?? "Could not load alerts"} onRetry={refetch} />
+        ) : (
+          <FlatList
+            data={filtered}
+            keyExtractor={item => String(item.id)}
+            renderItem={({ item, index }) => (
+              <AlertCard
+                alert={item}
+                showTimeline
+                isLast={index === filtered.length - 1}
+                onResolve={handleResolve}
+                isResolving={resolvingId === item.id}
+              />
+            )}
+            refreshControl={
+              <RefreshControl
+                refreshing={isFetching && !isLoading}
+                onRefresh={onRefresh}
+                tintColor={theme.primary}
+              />
+            }
+            contentContainerStyle={s.listContent}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={
+              <EmptyState
+                icon="checkmark.circle.fill"
+                title="All Clear!"
+                description={
+                  isResolvedView
+                    ? "No resolved alerts in history."
+                    : "No active safety alerts for your vehicles."
+                }
+              />
+            }
           />
         )}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <IconSymbol name="checkmark.circle.fill" size={48} color="#10B981" />
-            <Text style={styles.emptyTitle}>All Clear!</Text>
-            <Text style={styles.emptyText}>No alerts in this category</Text>
-          </View>
-        }
-      />
-    </ScreenContainer>
+      </ScreenContainer>
+    </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 12,
-    gap: 12,
-  },
-  backButton: {
-    width: 40, height: 40, borderRadius: 12,
-    backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E2E8F0',
-    alignItems: 'center', justifyContent: 'center',
-  },
-  title: { fontSize: 22, fontWeight: '700', color: '#1E293B' },
-  subtitle: { fontSize: 12, color: '#8E8E93', marginTop: 2 },
-  summaryRow: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    gap: 8,
-    marginBottom: 12,
-  },
-  summaryCard: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 10,
-    alignItems: 'center',
-    borderWidth: 1,
-  },
-  summaryCount: { fontSize: 20, fontWeight: '700' },
-  summaryLabel: { fontSize: 10, color: '#8E8E93', marginTop: 2 },
-  filtersRow: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    gap: 6,
-    marginBottom: 12,
-    flexWrap: 'wrap',
-  },
-  filterChip: {
-    paddingHorizontal: 12, paddingVertical: 6, borderRadius: 16,
-    backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E2E8F0',
-  },
-  filterChipActive: { borderColor: '#6152FF', backgroundColor: '#6152FF11' },
-  filterText: { fontSize: 12, color: '#8E8E93', fontWeight: '500' },
-  filterTextActive: { color: '#6152FF' },
-  listContent: { paddingHorizontal: 16, paddingBottom: 100 },
-  emptyContainer: { alignItems: 'center', paddingTop: 60, gap: 10 },
-  emptyTitle: { fontSize: 18, fontWeight: '700', color: '#1E293B' },
-  emptyText: { fontSize: 14, color: '#8E8E93' },
-});
+const makeStyles = (theme: ThemeColors) =>
+  StyleSheet.create({
+    safeArea: { flex: 1, backgroundColor: theme.bg },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 16,
+      paddingTop: 12,
+      paddingBottom: 12,
+      gap: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.cardBorder,
+    },
+    backButton: {
+      width: 38,
+      height: 38,
+      borderRadius: 12,
+      backgroundColor: theme.card,
+      borderWidth: 1,
+      borderColor: theme.cardBorder,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    title: { fontSize: 20, fontWeight: '800', color: theme.textPrimary },
+    subtitle: { fontSize: 11, color: theme.textSecondary, marginTop: 1 },
+
+    summaryRow: {
+      flexDirection: 'row',
+      paddingHorizontal: 16,
+      paddingTop: 12,
+      gap: 8,
+      marginBottom: 10,
+    },
+    summaryCard: {
+      flex: 1,
+      backgroundColor: theme.card,
+      borderRadius: 14,
+      padding: 10,
+      alignItems: 'center',
+      borderWidth: 1,
+    },
+    summaryCount: { fontSize: 18, fontWeight: '800' },
+    summaryLabel: { fontSize: 9.5, color: theme.textSecondary, marginTop: 2, fontWeight: '600' },
+
+    filtersRow: {
+      flexDirection: 'row',
+      paddingHorizontal: 16,
+      gap: 6,
+      marginBottom: 12,
+      flexWrap: 'wrap',
+    },
+    filterChip: {
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      borderRadius: 14,
+      backgroundColor: theme.card,
+      borderWidth: 1,
+      borderColor: theme.cardBorder,
+    },
+    filterChipActive: {
+      borderColor: theme.primary,
+      backgroundColor: theme.primarySoft,
+    },
+    filterText: { fontSize: 12, color: theme.textSecondary, fontWeight: '600' },
+    filterTextActive: { color: theme.primary, fontWeight: '700' },
+
+    listContent: { paddingHorizontal: 16, paddingBottom: 100 },
+  });

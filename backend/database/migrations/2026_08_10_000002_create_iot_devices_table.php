@@ -10,13 +10,10 @@ return new class extends Migration
     {
         Schema::create('iot_devices', function (Blueprint $table) {
             $table->id();
-            $table->string('device_identifier')->unique();
-            $table->string('device_type')->default('gps_tracker');
-            $table->foreignId('vehicle_id')->nullable()->constrained()->nullOnDelete();
-            $table->boolean('is_online')->default(false);
+            $table->foreignId('vehicle_id')->nullable()->constrained('vehicles')->nullOnDelete();
+            $table->string('name');
+            $table->string('api_key')->index();
             $table->timestamp('last_seen_at')->nullable();
-            $table->string('firmware_version')->nullable();
-            $table->string('status')->default('active'); // active, inactive, maintenance
             $table->timestamps();
         });
     }

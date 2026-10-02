@@ -1,189 +1,421 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  RefreshControl,
+  Animated,
 } from "react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Haptics from "expo-haptics";
 import { ScreenContainer } from "@/components/screen-container";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { useTheme, ThemeColors } from "@/context/ThemeContext";
+import { useOwnerTrips, useOwnerVehicles } from "@/hooks/useOwnerData";
+import { formatRelativeTime } from "@/lib/dateUtils";
+import { Skeleton, ErrorState, EmptyState, UpdatedBadge } from "@/components/ui/state-views";
 
-// ---- Placeholder data ----
-type Trip = {
-  id: string;
-  vehicleReg: string;
-  driverName: string;
-  route: string;
-  date: string;
-  status: 'completed' | 'ongoing' | 'cancelled';
-  revenue: number;
-  distance: number;
-};
-
-const MOCK_TRIPS: Trip[] = [
-  {
-    id: "trip-1",
-    vehicleReg: "KXX 000X",
-    driverName: "Driver One",
-    route: "Nairobi - Mombasa",
-    date: "Today, 08:30 AM",
-    status: "ongoing",
-    revenue: 4500,
-    distance: 230,
-  },
-  {
-    id: "trip-2",
-    vehicleReg: "KXX 001X",
-    driverName: "Driver Two",
-    route: "Nairobi - Kisumu",
-    date: "Yesterday, 07:00 AM",
-    status: "completed",
-    revenue: 12000,
-    distance: 350,
-  },
-];
-// -----------------------------------------------------------------
+const STATUS_FILTERS = ['all', 'ongoing', 'completed'] as const;
+type StatusFilter = typeof STATUS_FILTERS[number];
 
 export default function TripsScreen() {
+  const params = useLocalSearchParams<{ vehicle_id?: string }>();
   const { theme } = useTheme();
   const s = makeStyles(theme);
+
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [selectedVehicleId, setSelectedVehicleId] = useState<string | undefined>(
+    params.vehicle_id ? String(params.vehicle_id) : undefined
+  );
+
+  const { data: vehicles = [] } = useOwnerVehicles(false);
+
+  const {
+    data: tripsData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    isFetching,
+    dataUpdatedAt,
+  } = useOwnerTrips({
+    vehicle_id: selectedVehicleId || undefined,
+    status: statusFilter !== 'all' ? statusFilter : undefined,
+  });
+
+  const trips = tripsData?.data ?? [];
+
+  // Compliant with rule: create Animated.Value with useState(() => new Animated.Value(0.6))
+  const [pulseAnim] = useState(() => new Animated.Value(0.6));
+
+  useEffect(() => {
+    const pulse = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1,
+          duration: 900,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 0.6,
+          duration: 900,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    pulse.start();
+    return () => pulse.stop();
+  }, [pulseAnim]);
+
+  const onRefresh = async () => {
+    try {
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    } catch {}
+    refetch();
+  };
+
+  const handleStatusChange = (status: StatusFilter) => {
+    try {
+      Haptics.selectionAsync();
+    } catch {}
+    setStatusFilter(status);
+  };
+
+  const handleVehicleSelect = (id: string | undefined) => {
+    try {
+      Haptics.selectionAsync();
+    } catch {}
+    setSelectedVehicleId(id);
+  };
 
   return (
     <SafeAreaView style={s.safeArea} edges={['top', 'left', 'right']}>
       <ScreenContainer containerClassName="bg-background" style={{ backgroundColor: theme.bg }}>
         {/* Header */}
         <View style={s.header}>
-          <Text style={s.title}>Trips History</Text>
-          <Text style={s.subtitle}>Monitor past and ongoing trips</Text>
+          <View style={s.headerTop}>
+            <View>
+              <Text style={s.title}>Trips History</Text>
+              <Text style={s.subtitle}>Real-time passenger & revenue logs</Text>
+            </View>
+            <UpdatedBadge
+              updatedAt={dataUpdatedAt ? new Date(dataUpdatedAt) : null}
+              isFetching={isFetching}
+            />
+          </View>
+
+          {/* Vehicle selector chip row */}
+          {vehicles.length > 0 && (
+            <View style={s.vehicleFilterRow}>
+              <TouchableOpacity
+                onPress={() => handleVehicleSelect(undefined)}
+                style={[
+                  s.vehicleFilterChip,
+                  !selectedVehicleId && { backgroundColor: theme.primary, borderColor: theme.primary },
+                ]}
+              >
+                <Text
+                  style={[
+                    s.vehicleFilterText,
+                    !selectedVehicleId && { color: '#FFFFFF', fontWeight: '700' },
+                  ]}
+                >
+                  All Vehicles ({vehicles.length})
+                </Text>
+              </TouchableOpacity>
+
+              {vehicles.map(v => {
+                const isSelected = selectedVehicleId === String(v.id);
+                return (
+                  <TouchableOpacity
+                    key={v.id}
+                    onPress={() => handleVehicleSelect(isSelected ? undefined : String(v.id))}
+                    style={[
+                      s.vehicleFilterChip,
+                      isSelected && { backgroundColor: theme.primary, borderColor: theme.primary },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        s.vehicleFilterText,
+                        isSelected && { color: '#FFFFFF', fontWeight: '700' },
+                      ]}
+                    >
+                      {v.number_plate}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          )}
+
+          {/* Status filter chips */}
+          <View style={s.statusFilterRow}>
+            {STATUS_FILTERS.map(f => {
+              const isSelected = statusFilter === f;
+              return (
+                <TouchableOpacity
+                  key={f}
+                  onPress={() => handleStatusChange(f)}
+                  activeOpacity={0.8}
+                  style={[
+                    s.statusChip,
+                    isSelected && { backgroundColor: theme.primarySoft, borderColor: theme.primary },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      s.statusChipText,
+                      isSelected && { color: theme.primary, fontWeight: '700' },
+                    ]}
+                  >
+                    {f === 'all' ? 'All Trips' : f === 'ongoing' ? 'Ongoing' : 'Completed'}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </View>
 
-        {/* Trips List */}
-        <FlatList
-          data={MOCK_TRIPS}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity 
-              activeOpacity={0.8}
-              onPress={() => router.push(`/trip/${item.id}` as any)}
-              style={s.tripCard}
-            >
-              <View style={s.cardTop}>
-                <View style={s.routeWrap}>
-                  <IconSymbol name="map.fill" size={16} color={theme.emerald} />
-                  <Text style={s.routeText}>{item.route}</Text>
-                </View>
-                <View style={[s.statusBadge, item.status === 'ongoing' ? s.statusOngoing : s.statusCompleted]}>
-                  <Text style={[s.statusText, item.status === 'ongoing' ? {color: theme.amber} : {color: theme.emerald}]}>
-                    {item.status.toUpperCase()}
-                  </Text>
-                </View>
-              </View>
-              
-              <View style={s.cardMiddle}>
-                <View style={s.infoBlock}>
-                  <Text style={s.infoLabel}>Vehicle</Text>
-                  <Text style={s.infoValue}>{item.vehicleReg}</Text>
-                </View>
-                <View style={s.infoBlock}>
-                  <Text style={s.infoLabel}>Driver</Text>
-                  <Text style={s.infoValue}>{item.driverName}</Text>
-                </View>
-                <View style={s.infoBlock}>
-                  <Text style={s.infoLabel}>Revenue</Text>
-                  <Text style={[s.infoValue, { color: theme.primary }]}>KES {item.revenue}</Text>
-                </View>
-              </View>
-              
-              <View style={s.cardBottom}>
-                <Text style={s.dateText}>{item.date}</Text>
-                <Text style={s.distText}>{item.distance} km</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-          contentContainerStyle={s.listContent}
-          showsVerticalScrollIndicator={false}
-        />
+        {/* Content */}
+        {isLoading ? (
+          <View style={{ padding: 20, gap: 12 }}>
+            <Skeleton height={130} borderRadius={18} />
+            <Skeleton height={130} borderRadius={18} />
+            <Skeleton height={130} borderRadius={18} />
+          </View>
+        ) : isError ? (
+          <ErrorState message={(error as any)?.message ?? "Could not load trips"} onRetry={refetch} />
+        ) : (
+          <FlatList
+            data={trips}
+            keyExtractor={item => String(item.id)}
+            renderItem={({ item }) => {
+              const isOngoing = item.status === 'ongoing';
+
+              return (
+                <TouchableOpacity
+                  activeOpacity={0.85}
+                  onPress={() => router.push(`/trip/${item.id}` as any)}
+                  style={s.tripCard}
+                >
+                  <View style={s.cardTop}>
+                    <View style={s.routeWrap}>
+                      <IconSymbol name="map.fill" size={15} color={theme.emerald} />
+                      <Text style={s.routeText} numberOfLines={1}>
+                        {item.route_name ?? 'Nairobi Loop'}
+                      </Text>
+                    </View>
+
+                    {isOngoing ? (
+                      <Animated.View
+                        style={[
+                          s.statusBadge,
+                          s.statusOngoing,
+                          { opacity: pulseAnim },
+                        ]}
+                      >
+                        <View style={[s.pulseDot, { backgroundColor: theme.amber }]} />
+                        <Text style={[s.statusText, { color: theme.amber }]}>ONGOING</Text>
+                      </Animated.View>
+                    ) : (
+                      <View style={[s.statusBadge, s.statusCompleted]}>
+                        <Text style={[s.statusText, { color: theme.emerald }]}>COMPLETED</Text>
+                      </View>
+                    )}
+                  </View>
+
+                  <View style={s.cardMiddle}>
+                    <View style={s.infoBlock}>
+                      <Text style={s.infoLabel}>Vehicle</Text>
+                      <Text style={s.infoValue}>{item.vehicle_plate ?? `ID #${item.vehicle_id}`}</Text>
+                    </View>
+
+                    <View style={s.infoBlock}>
+                      <Text style={s.infoLabel}>Est. Boardings</Text>
+                      <Text style={s.infoValue}>{item.boardings_estimate ?? 0} pax</Text>
+                    </View>
+
+                    <View style={s.infoBlock}>
+                      <Text style={s.infoLabel}>Est. Revenue</Text>
+                      <Text style={[s.infoValue, { color: theme.emerald }]}>
+                        KES {Number(item.revenue_estimate ?? 0).toLocaleString('en-KE', { minimumFractionDigits: 0 })}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={s.cardBottom}>
+                    <Text style={s.dateText}>
+                      {item.started_at ? formatRelativeTime(item.started_at) : '—'}
+                    </Text>
+                    <Text style={s.distText}>
+                      {item.distance_km ? `${item.distance_km} km` : '0 km'} · {item.duration_minutes ? `${item.duration_minutes}m` : 'active'}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+            refreshControl={
+              <RefreshControl
+                refreshing={isFetching && !isLoading}
+                onRefresh={onRefresh}
+                tintColor={theme.primary}
+              />
+            }
+            contentContainerStyle={s.listContent}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={
+              <EmptyState
+                icon="map.fill"
+                title="No Trips Recorded"
+                description={
+                  selectedVehicleId
+                    ? "No trips found for this vehicle. Trips will be recorded automatically when the vehicle moves."
+                    : "No trips found. Launch the simulator or wait for vehicle telemetry."
+                }
+              />
+            }
+          />
+        )}
       </ScreenContainer>
     </SafeAreaView>
   );
 }
 
-const makeStyles = (theme: ThemeColors) => StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: theme.bg },
-  header: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 16,
-  },
-  title: { fontSize: 28, fontWeight: '800', color: theme.textPrimary },
-  subtitle: { fontSize: 14, color: theme.textSecondary, marginTop: 4 },
-  
-  listContent: { paddingHorizontal: 20, paddingBottom: 100, gap: 12 },
-  
-  tripCard: {
-    backgroundColor: theme.card,
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: theme.cardBorder,
-    shadowColor: theme.primaryDeep,
-    shadowOpacity: theme.mode === 'dark' ? 0 : 0.05,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
-  },
-  cardTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  routeWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  routeText: { fontSize: 16, fontWeight: '700', color: theme.textPrimary },
-  statusBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
-    borderWidth: 1,
-  },
-  statusOngoing: {
-    backgroundColor: theme.amberSoft,
-    borderColor: theme.mode === 'dark' ? theme.amber + '44' : theme.amberSoft,
-  },
-  statusCompleted: {
-    backgroundColor: theme.emeraldSoft,
-    borderColor: theme.mode === 'dark' ? theme.emerald + '44' : theme.emeraldSoft,
-  },
-  statusText: { fontSize: 10, fontWeight: '800' },
-  
-  cardMiddle: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-    backgroundColor: theme.mode === 'dark' ? theme.bg : '#F8F9FA',
-    padding: 12,
-    borderRadius: 12,
-  },
-  infoBlock: { alignItems: 'flex-start' },
-  infoLabel: { fontSize: 11, color: theme.textSecondary, marginBottom: 4 },
-  infoValue: { fontSize: 13, fontWeight: '700', color: theme.textPrimary },
-  
-  cardBottom: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: theme.cardBorder,
-    paddingTop: 12,
-  },
-  dateText: { fontSize: 12, color: theme.textSecondary, fontWeight: '500' },
-  distText: { fontSize: 12, color: theme.textSecondary, fontWeight: '600' },
-});
+const makeStyles = (theme: ThemeColors) =>
+  StyleSheet.create({
+    safeArea: { flex: 1, backgroundColor: theme.bg },
+    header: {
+      paddingHorizontal: 20,
+      paddingTop: 16,
+      paddingBottom: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.cardBorder,
+      backgroundColor: theme.bg,
+    },
+    headerTop: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      marginBottom: 12,
+    },
+    title: { fontSize: 26, fontWeight: '800', color: theme.textPrimary },
+    subtitle: { fontSize: 13, color: theme.textSecondary, marginTop: 2 },
+
+    vehicleFilterRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 6,
+      marginBottom: 10,
+    },
+    vehicleFilterChip: {
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      borderRadius: 12,
+      backgroundColor: theme.card,
+      borderWidth: 1,
+      borderColor: theme.cardBorder,
+    },
+    vehicleFilterText: {
+      fontSize: 11.5,
+      fontWeight: '600',
+      color: theme.textSecondary,
+    },
+
+    statusFilterRow: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    statusChip: {
+      flex: 1,
+      paddingVertical: 8,
+      borderRadius: 12,
+      alignItems: 'center',
+      backgroundColor: theme.card,
+      borderWidth: 1,
+      borderColor: theme.cardBorder,
+    },
+    statusChipText: {
+      fontSize: 12,
+      fontWeight: '600',
+      color: theme.textSecondary,
+    },
+
+    listContent: { padding: 20, paddingBottom: 100, gap: 12 },
+
+    tripCard: {
+      backgroundColor: theme.card,
+      borderRadius: 20,
+      padding: 16,
+      borderWidth: 1,
+      borderColor: theme.cardBorder,
+      shadowColor: theme.primaryDeep,
+      shadowOpacity: theme.mode === 'dark' ? 0 : 0.05,
+      shadowRadius: 10,
+      shadowOffset: { width: 0, height: 4 },
+      elevation: 2,
+    },
+    cardTop: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 14,
+    },
+    routeWrap: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      flex: 1,
+      marginRight: 8,
+    },
+    routeText: { fontSize: 15, fontWeight: '700', color: theme.textPrimary },
+    statusBadge: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 5,
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      borderRadius: 8,
+      borderWidth: 1,
+    },
+    statusOngoing: {
+      backgroundColor: theme.amberSoft,
+      borderColor: theme.amber + '44',
+    },
+    statusCompleted: {
+      backgroundColor: theme.emeraldSoft,
+      borderColor: theme.emerald + '44',
+    },
+    pulseDot: {
+      width: 6,
+      height: 6,
+      borderRadius: 3,
+    },
+    statusText: { fontSize: 9.5, fontWeight: '800' },
+
+    cardMiddle: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 14,
+      backgroundColor: theme.mode === 'dark' ? theme.track : theme.bg,
+      padding: 12,
+      borderRadius: 14,
+    },
+    infoBlock: { alignItems: 'flex-start' },
+    infoLabel: { fontSize: 10.5, color: theme.textSecondary, marginBottom: 3 },
+    infoValue: { fontSize: 13, fontWeight: '700', color: theme.textPrimary },
+
+    cardBottom: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      borderTopWidth: 1,
+      borderTopColor: theme.cardBorder,
+      paddingTop: 10,
+    },
+    dateText: { fontSize: 11.5, color: theme.textSecondary, fontWeight: '500' },
+    distText: { fontSize: 11.5, color: theme.textSecondary, fontWeight: '600' },
+  });

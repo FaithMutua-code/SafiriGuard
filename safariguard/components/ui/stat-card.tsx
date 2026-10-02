@@ -1,15 +1,12 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Animated } from "react-native";
 import { GlassCard } from "./glass-card";
 import { IconSymbol } from "./icon-symbol";
-import { SymbolViewProps } from "expo-symbols";
-
-type IconName = SymbolViewProps["name"];
 
 interface StatCardProps {
   label: string;
   value: string | number;
-  icon: IconName;
+  icon: any;
   iconColor: string;
   trend?: number;
   subtitle?: string;
@@ -18,15 +15,16 @@ interface StatCardProps {
 }
 
 export function StatCard({ label, value, icon, iconColor, trend, subtitle, glow, glowColor }: StatCardProps) {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(12)).current;
+  // Compliant with rule: create Animated.Value with useState(() => new Animated.Value(0))
+  const [fadeAnim] = useState(() => new Animated.Value(0));
+  const [slideAnim] = useState(() => new Animated.Value(12));
 
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, { toValue: 1, duration: 400, useNativeDriver: true }),
       Animated.timing(slideAnim, { toValue: 0, duration: 400, useNativeDriver: true }),
     ]).start();
-  }, []);
+  }, [fadeAnim, slideAnim]);
 
   return (
     <GlassCard glow={glow} glowColor={glowColor} className="p-4 flex-1">

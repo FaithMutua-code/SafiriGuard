@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from "react-native";
 import { router } from "expo-router";
 import { IconSymbol } from "@/components/ui/icon-symbol";
@@ -12,9 +12,9 @@ const FEATURES = [
 ] as const;
 
 export default function WelcomeScreen() {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.92)).current;
-  const featureAnims = useRef(FEATURES.map(() => new Animated.Value(0))).current;
+  const [fadeAnim] = useState(() => new Animated.Value(0));
+  const [scaleAnim] = useState(() => new Animated.Value(0.92));
+  const [featureAnims] = useState(() => FEATURES.map(() => new Animated.Value(0)));
 
   useEffect(() => {
     Animated.parallel([

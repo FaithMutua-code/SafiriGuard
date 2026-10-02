@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Animated } from "react-native";
 
 // Vehicle Owner app — only one role
@@ -186,7 +186,7 @@ export function ShimmerLoader({
   borderRadius = 8,
   style,
 }: ShimmerProps) {
-  const shimmerAnim = useRef(new Animated.Value(0)).current;
+  const [shimmerAnim] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
     const animation = Animated.loop(
