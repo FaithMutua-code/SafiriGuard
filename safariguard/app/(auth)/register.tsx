@@ -23,7 +23,6 @@ export default function RegisterScreen() {
 
   const emailRef = useRef<TextInput>(null);
   const phoneRef = useRef<TextInput>(null);
-  const idRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
   const confirmRef = useRef<TextInput>(null);
 
@@ -32,7 +31,6 @@ export default function RegisterScreen() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [idNumber, setIdNumber] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -46,10 +44,6 @@ export default function RegisterScreen() {
       setError("Passwords do not match");
       return;
     }
-    if (!idNumber.trim()) {
-      setError("National ID number is required");
-      return;
-    }
 
     setError("");
     setLoading(true);
@@ -59,7 +53,6 @@ export default function RegisterScreen() {
         email,
         phone: phone || undefined,
         password,
-        id_number: idNumber,
       });
       router.replace("/onboarding/add-vehicle");
     } catch (e: any) {
@@ -167,16 +160,9 @@ export default function RegisterScreen() {
               keyboardType="phone-pad"
               autoComplete="tel"
               textContentType="telephoneNumber"
-            />
-            <AuthInput
-              ref={idRef}
-              label="National ID number *"
-              icon="person.text.rectangle.fill"
-              placeholder="Enter your ID number"
-              value={idNumber}
-              onChangeText={setIdNumber}
-              keyboardType="number-pad"
-              autoComplete="off"
+              returnKeyType="next"
+              onSubmitEditing={() => passwordRef.current?.focus()}
+              blurOnSubmit={false}
             />
           </View>
 

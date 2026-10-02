@@ -21,7 +21,7 @@ interface RegisterOwnerPayload {
   email: string;
   phone?: string;
   password: string;
-  id_number: string;
+  id_number?: string;
 }
 
 interface AuthContextValue {

@@ -18,7 +18,7 @@ class RegisterOwnerController extends Controller
             'email' => 'required|email|unique:users',
             'phone' => 'nullable|string',
             'password' => 'required|min:8',
-            'id_number' => 'required|string|unique:vehicle_owners,id_number',
+            'id_number' => 'nullable|string|unique:vehicle_owners,id_number',
             'next_of_kin' => 'nullable|string',
         ]);
 
@@ -33,7 +33,7 @@ class RegisterOwnerController extends Controller
 
             $owner = VehicleOwner::create([
                 'user_id' => $user->id,
-                'id_number' => $data['id_number'],
+                'id_number' => $data['id_number'] ?? null,
                 'next_of_kin' => $data['next_of_kin'] ?? null,
             ]);
 

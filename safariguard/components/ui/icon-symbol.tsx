@@ -75,6 +75,7 @@ const MAPPING = {
   "doc.text.fill": "description",
   "square.and.arrow.up": "share",
   "arrow.left": "arrow-back",
+  "arrow.right": "arrow-forward",
 } as IconMapping;
 
 export function IconSymbol({
